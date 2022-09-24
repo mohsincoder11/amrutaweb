@@ -108,3 +108,5 @@ Route::get('create_order_api', 'Api_controller@create_order_api')->name('create_
 //shopoporder using machine
 
 Route::post('generate_shop_order', 'Api_controller@generate_shop_order')->name('generate_shop_order');
+
+Route::post('send-sms','AdminController@send_sms');

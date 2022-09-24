@@ -65,6 +65,10 @@
                                     </div>
 
                                     <div class="col-md-2" style="margin-top:15px;">
+                                        <label>Opening Amount<font color="#FF0000"></font></label>
+                                        <input type="text" name="opening_amount" id="opening_amount" placeholder="Opening Amount" class="form-control closing_amount_cal" readonly="" value="0" required />
+                                    </div>
+                                    <div class="col-md-2" style="margin-top:15px;">
                                         <label>Opening Birds<font color="#FF0000"></font></label>
                                         <input type="text" name="openingbirds" id="openingbirds" placeholder="Opening Birds" class="form-control" readonly="" required />
                                     </div>
@@ -100,7 +104,7 @@
 
                                     <div class="col-md-2" style="margin-top:15px;">
                                         <label>Mortality<font color="#FF0000"></font></label>
-                                        <input type="number" name="mortality" id="mortality" placeholder="Mortality" class="form-control callculate_closing" required />
+                                        <input type="number" name="mortality" id="mortality" value="0" placeholder="Mortality" class="form-control callculate_closing" required />
                                     </div>
 
 
@@ -114,16 +118,36 @@
                                     </div>
                                     <div class="col-md-2" style="margin-top:15px;">
                                         <label>Total Sale Amt.<font color="#FF0000"></font></label>
-                                        <input type="number" name="tsaleamt" id="tsaleamt" placeholder="Total Sale Amount" class="form-control" required />
+                                        <input type="number" name="tsaleamt" id="tsaleamt" placeholder="Total Sale Amount" class="form-control closing_amount_cal" value="0" required />
                                     </div>
                                     <div class="col-md-2" style="margin-top:15px;">
                                         <label>Dis. Amount<font color="#FF0000"></font></label>
-                                        <input type="number" name="disamt" id="disamt" placeholder="Dscount Amount" class="form-control" required />
+                                        <input type="number" name="disamt" id="disamt" value="0" placeholder="Discount Amount" class="form-control" required />
+                                    </div>
+                                    <div class="col-md-2" style="margin-top:15px;">
+                                        <label>Deposit Amount Bank<font color="#FF0000"></font></label>
+                                        <input type="number" name="deposit_amount_bank" id="deposit_amount_bank" value="0" placeholder="Dscount Amount Bank" class="form-control closing_amount_cal" required />
+                                    </div>
+                                    <div class="col-md-2" style="margin-top:15px;">
+                                        <label>Deposit Amount Office<font color="#FF0000"></font></label>
+                                        <input type="number" name="deposit_amount_office" id="deposit_amount_office" value="0" placeholder="Dscount Amount Office" class="form-control closing_amount_cal" required />
+                                    </div>
+                                    <div class="col-md-2" style="margin-top:15px;">
+                                        <label>Deposit Amount PhonePay<font color="#FF0000"></font></label>
+                                        <input type="number" name="deposit_amount_phonepay" id="deposit_amount_phonepay" value="0" placeholder="Dscount Amount phonepay" class="form-control closing_amount_cal" required />
+                                    </div>
+                                    <div class="col-md-2" style="margin-top:15px;">
+                                        <label>Expenses<font color="#FF0000"></font></label>
+                                        <input type="number" name="expenses" id="expenses" value="0" placeholder="Daily Expense" class="form-control closing_amount_cal" required />
+                                    </div>
+                                    <div class="col-md-2" style="margin-top:15px;">
+                                        <label>Closing Amount<font color="#FF0000"></font></label>
+                                        <input type="number" name="closing_amount" id="closing_amount" value="0" placeholder="Closing Amount " class="form-control" required />
                                     </div>
 
                                     <div class="col-md-2" style="margin-top:15px;">
                                         <label>Meat Percentage<font color="#FF0000"></font></label>
-                                        <input type="number" step="0.01" name="meat_percent" id="meat_percent" placeholder="Meat Percentage" class="form-control" readonly="" required />
+                                        <input type="number" step="0.01" name="meat_percent" id="meat_percent" value="0" placeholder="Meat Percentage" class="form-control" readonly="" required />
                                     </div>
                                 </div>
                                 <div class="row">
@@ -153,6 +177,18 @@
 
 
                         <div class="panel-body" style="margin-top:-10px; margin-bottom:-15px;">
+                            <table border="0" cellspacing="5" cellpadding="5">
+                                <tbody>
+                                    <tr>
+                                        <td>Start date:</td>
+                                        <td><input class="form-control pt-4" type="text"  id="min" name="min"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>End date:</td>
+                                        <td><input class="form-control" type="text"  id="max" name="max"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                             <table class="table" id="dailyentrytable">
                                 <thead>
                                     <tr>
@@ -168,8 +204,9 @@
                                         <th width="5%">Wt.</th>
                                         <th width="7%">Closing Birds</th>
                                         <th width="7%">Total sale Amt.</th>
-                                        <th width="5%">Amount</th>
+                                        <th width="5%">Dis Amount</th>
                                         <th width="5%">Meat Percentage</th>
+                                        <th width="5%">Closing Balance</th>
                                         <th width="5%">Action</th>
                                     </tr>
                                 </thead>
@@ -206,6 +243,7 @@
 @stop
 @section('js')
 @include('Shop/count_script')
+<script type="text/javascript" src="https://cdn.datatables.net/datetime/1.1.2/js/dataTables.dateTime.js"></script>
 
 <script>
     $(document).ready(function() {
@@ -217,6 +255,7 @@
         var today_sale_Chicken = 0;
         var today_sale_gurda_kaleji = 0;
         var avg_body_wt_of_meat_bird;
+
         $("#shopmodel_select").on('change', function() {
             var opening_birds = $("#shopmodel_select option:selected").attr('opening_birds');
             var bird_weights = $("#shopmodel_select option:selected").attr('birds_weights');
@@ -246,14 +285,16 @@
                 },
                 dataType: 'json',
                 success: function(data) {
-                    console.log(data);
-                    $("#billqtywt").val(data['weight'].toFixed(4));
+                 //   console.log(data);
+                 $("#billqtywt").val(data['weight'].toFixed(4));
+                 $("#opening_amount").val(data['opening_amount'].toFixed(2));
                     today_sale_Chicken = data['salable_chicken'];
                     today_sale_gurda_kaleji = data['salable_kaleji'];
                     $("#loader").hide();
                 }
             });
         }
+        
         $.ajax({
             type: "get",
             url: "{{Route('get_shop_opening_birds')}}",
@@ -315,8 +356,6 @@
                 url: "{{Route('getdailyentry')}}",
                 dataType: 'json',
                 success: function(data) {
-
-                    // console.log(data);
                     $('#dailyentrytable').DataTable().clear().destroy();
                     $.each(data, function(a, b) {
                         var shopname;
@@ -328,7 +367,7 @@
                         let salegwt=parseFloat(b.salegwt).toFixed(3);
                         let wt=parseFloat(b.wt).toFixed(3);
                         $("#dailyentryrow").append(
-                            '<tr><td>' + b.id + '</td><td>' + b.date + '</td><td>' + shopname + '</td><td>' + b.time + '</td><td>' + b.openingbirds + '</td><td>' + b.salegbird + '</td><td>' +salegwt + '</td><td>100</td><td>' + b.mortality + '</td><td>' + wt + '</td><td>' + b.closingbird + '</td><td>' + b.tsaleamt + '</td><td>' + b.disamt + '</td><td>' + b.meat_percent + '</td><td><a  class="modal-effect btn btn-danger btn-xs rounded-circle delete" data-toggle="modal" data-effect="effect-sign" id=' + b.id + ' data-toggle="tooltip-danger" title="Delete Record" data-placement="top"><i class="fa fa-trash"></i></a></td></tr>'
+                            '<tr><td>' + b.id + '</td><td>' + b.date + '</td><td>' + shopname + '</td><td>' + b.time + '</td><td>' + b.openingbirds + '</td><td>' + b.salegbird + '</td><td>' +salegwt + '</td><td>100</td><td>' + b.mortality + '</td><td>' + wt + '</td><td>' + b.closingbird + '</td><td>' + b.tsaleamt + '</td><td>' + b.disamt + '</td><td>' + b.meat_percent + '</td><td>' + b.closing_amount + '</td><td><a  class="modal-effect btn btn-danger btn-xs rounded-circle delete" data-toggle="modal" data-effect="effect-sign" id=' + b.id + ' data-toggle="tooltip-danger" title="Delete Record" data-placement="top"><i class="fa fa-trash"></i></a></td></tr>'
                         );
                         //alert(data[j].fullname);
                     });
@@ -359,6 +398,7 @@
                 }
             });
         });
+
         $('#dailyentrytable tbody').on('click', '.editrecord', function() {
             var id = $(this).attr('id');
             //alert(id);
@@ -389,13 +429,72 @@
                     $("#dispose").val(data.dispose);
                     $("#meat_percent").val(data.meat_percent);
                     $("#tsaleamt").val(data.tsaleamt);
+                    
+
+
+
+
+                    $("#deposit_amount_phonepay").val(data.deposit_amount_phonepay);
+                    $("#deposit_amount_bank").val(data.deposit_amount_bank);
+                    $("#deposit_amount_office").val(data.deposit_amount_office);
+                    $("#expenses").val(data.expenses);
+                    $("#closing_amount").val(data.closing_amount);
+                    $("#opening_amount").val(data.opening_amount);
+
 
                 }
             });
         });
 
+     
+ 
+    // DataTables initialisation
+    var table = $('#dailyentrytable').DataTable();
+    var minDate, maxDate;
+
+    minDate = new DateTime($('#min'), {
+    format: 'YYYY-MM-DD'
+});
+maxDate = new DateTime($('#max'), {
+    format: 'YYYY-MM-DD'
+});
+// Custom filtering function which will search data in column four between two values
+$.fn.dataTable.ext.search.push(
+    function(settings, data, dataIndex) {
+        
+        var min = minDate.val();
+        var max = maxDate.val();
+        var date = new Date(data[1]);
+
+        if (
+            (min == null && max == null) ||
+            (min == null && date <= max) ||
+            (min <= date && max == null) ||
+            (min <= date && date <= max)
+        ) {
+            return true;
+        }
+        return false;
+    }
+);
+
+
+    // Refilter the table
+    $('#min, #max').on('change', function() {
+            $("#dailyentrytable").DataTable().draw();
+        });
+
+
         function createtable() {
-            $("#dailyentrytable").dataTable({
+            table= $("#dailyentrytable").dataTable({
+                dom: 'Bfrtip',
+
+                buttons: {
+                buttons: [
+                 'excel', 'pdf', 
+
+                ]
+            },
                 "info": true,
                 "autoWidth": false,
                 responsive: true,
@@ -420,7 +519,7 @@
 
 
 
-        $(".callculate_closing").keyup(function() {
+        $(".callculate_closing").on('keyup',function() {
             var openingbirds = $("#openingbirds").val();
             var salegbird = $("#salegbird").val();
             var mortality = $("#mortality").val();
@@ -428,7 +527,14 @@
             $("#closingbird").val(closingbird);
         });
 
-        $(".calculate_sale_wt").keyup(function() {
+        $(".closing_amount_cal").on('keyup',function() {
+            var closing_amount = (parseFloat($("#opening_amount").val())+parseFloat($("#tsaleamt").val()))-
+            (parseFloat($("#deposit_amount_bank").val())+ parseFloat($("#deposit_amount_office").val())+parseFloat($("#expenses").val())+parseFloat($("#deposit_amount_phonepay").val()));    
+
+            $("#closing_amount").val(closing_amount.toFixed(2));
+        });
+
+        $(".calculate_sale_wt").on('keyup',function() {
             var billqtywt = $("#billqtywt").val();
             var stock_chick_sale = $("#stock_chick_sale").val();
             var stock_g_k_sale = $("#stock_g_k_sale").val();

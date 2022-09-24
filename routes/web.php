@@ -43,6 +43,7 @@ Route::get('delete_coupon','MasterController@delete_coupon')->name('delete_coupo
 Route::get('edit_coupon','MasterController@edit_coupon')->name('edit_coupon');
 Route::get('update_coupon_status','MasterController@update_coupon_status')->name('update_coupon_status');
 Route::get('view_meter_report/{user_id}','MasterController@view_meter_report')->name('view_meter_report');
+Route::post('get_meter_report','MasterController@get_meter_report')->name('get_meter_report');
 
 
 //More
@@ -334,3 +335,4 @@ Route::get('/clear-cache', function () {
     return redirect()->back();
     //return "All cache cleared!";
 });
+

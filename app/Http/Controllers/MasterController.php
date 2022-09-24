@@ -294,10 +294,23 @@ class MasterController extends Controller
 	public function view_meter_report(Request $request)
 	{
 		$name=Deliveryboy::where('id', $request->user_id)->pluck('name')->first();
+		
+	
+		return view('master.meter_report',compact('name'));
+	}
+
+	public function get_meter_report(Request $request){
 		$report = DB::table('meter_reading')->select(DB::raw('DATE(created_at) as date'),'id','vehicle_no','reading','created_at','file','user_id')->where('user_id', $request->user_id)->orderby('id','desc')
 		->groupBy('date')->get();
-	
-		return view('master.meter_report',compact('name', 'report'));
+
+		$result = [
+            "draw"            => $params['draw'],
+            "recordsTotal"    => $totalData,
+            "recordsFiltered" => $totalFiltered,
+            "data"            => $data
+        ];
+
+        return response()->json($result);
 	}
 
 	public function checkuniqueprefix(Request $request)

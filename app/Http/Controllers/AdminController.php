@@ -429,6 +429,7 @@ class AdminController extends Controller
 		Godawn_user::where('user_id', $request->id)->delete();
 		return response()->json(1);
 	}
+
 	public function edit_godawn_user(Request $request)
 	{
 		$getuser = DB::table('usermanages')->join('godawn_users', 'godawn_users.user_id', '=', 'usermanages.id')
@@ -438,4 +439,21 @@ class AdminController extends Controller
 			->first();
 		echo json_encode($getuser);
 	}
+
+	public function send_sms(Request $request){		
+		$msg = urlencode($request->msg);
+		$to = $request->mobile;
+		$template_id=$request->template_id;
+		 $data1 = "uname=habitm1&pwd=habitm1&senderid=AMFOOD&to=" . $to . "&msg=" . $msg . "&route=T&peid=1001880907683289176&tempid=".$template_id;				
+		$ch = curl_init('http://bulksms.webmediaindia.com/sendsms?');
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data1);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$result = curl_exec($ch);
+		curl_close($ch);					
+		return response()->json($result);			
+			
+}
+
+
 }

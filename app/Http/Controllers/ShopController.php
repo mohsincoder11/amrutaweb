@@ -223,10 +223,11 @@ class ShopController extends Controller
 
 		if ($string != null && $assign == 1) {
 			$new = explode(',', $string);
-			$olddata;
+			//$olddata;
 
 			$i = 0;
 			$this->data['shop'] = array();
+			$ordernofor=array();
 			foreach ($new as $n) {
 				if ($n != "") {
 
@@ -434,8 +435,8 @@ class ShopController extends Controller
 	}
 	public function dailyentrys()
 	{
-		$this->data['shops'] = DB::table('shops')->select('id', 'userid', 'shopname', 'birds_weights', 'opening_birds')->get();
-		return view('Shop.dailyentrys', $this->data);
+		$shops = DB::table('shops')->select('id', 'userid', 'shopname', 'birds_weights', 'opening_birds')->get();
+		return view('Shop.dailyentrys', compact('shops'));
 	}
 
 	public function get_total_weight_shop(Request $request)
@@ -465,17 +466,21 @@ class ShopController extends Controller
 		$ck_and_gk = StockDispose::select('salable_chicken', 'salable_g_k')->where('shop_id', $shop_id->masterid)
 			->WhereDate('created_at', \Carbon\Carbon::today())
 			->first();
+			$opening_amount=\App\Dailyentry::select('closing_amount')->where('user_id',$request->shop_id)->orderby('id','desc')->first();
+			
 		if ($ck_and_gk) {
 			$data = [
 				'weight' => $totalweight - $petfood_weight,
 				'salable_chicken' => $ck_and_gk['salable_chicken'],
-				'salable_kaleji' => $ck_and_gk['salable_g_k']
+				'salable_kaleji' => $ck_and_gk['salable_g_k'],
+				'opening_amount'=>$opening_amount ? $opening_amount['closing_amount'] : 0
 			];
 		} else {
 			$data = [
 				'weight' => $totalweight - $petfood_weight,
 				'salable_chicken' => 0,
-				'salable_kaleji' => 0
+				'salable_kaleji' => 0,
+				'opening_amount'=>$opening_amount ? $opening_amount['closing_amount'] : 0
 			];
 		}
 

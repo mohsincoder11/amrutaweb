@@ -497,7 +497,8 @@ class Api_controller extends Controller
 				Teleorderlist::where('id', $a->id)->delete();
 			}
 		}
-		$wallet_credit = DB::table('wallets')->select('total_credit')->where('user_id', $request->user_id)->orderby('id', 'desc')->first();
+		$wallet_credit = DB::table('wallets')->select('total_credit')->where('user_id', $request->user_id)
+		->where('status',1)->orderby('id', 'desc')->first();
 		$data = [
 			'cart_item' => DB::table('teleorderlists')
 				->join('items', 'teleorderlists.item_id', '=', 'items.id')

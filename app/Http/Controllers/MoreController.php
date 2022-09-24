@@ -290,6 +290,13 @@ class MoreController extends Controller
 				'stock_g_k_sale' => $request['stock_g_k_sale'],
 				'stock_chick_sale' => $request['stock_chick_sale'],
 				'meat_percent' => $request['meat_percent'],
+				'deposit_amount_bank'=>$request['deposit_amount_bank'],
+				'deposit_amount_office'=>$request['deposit_amount_office'],
+				'expenses'=>$request['expenses'],
+				'closing_amount'=>$request['closing_amount'],
+				'opening_amount'=>$request['opening_amount'],
+				'deposit_amount_phonepay'=>$request['deposit_amount_phonepay'],
+				
 			]);
 
 			Shop::where('id', $request['shop_id'])->update([
@@ -298,10 +305,13 @@ class MoreController extends Controller
 			]);
 
 			$update=StockDispose::where('shop_id', $request['shop_id'])->orderby('id','desc')->first();
-			$update->update([
+			if($update){
+				$update->update([
 				'total_salable_chicken' => DB::raw('total_salable_chicken - ' . $request['stock_chick_sale']),
 				'total_salable_g_k' => DB::raw('total_salable_g_k - ' . $request['stock_g_k_sale']),
 			]);
+			}
+			
 	
 			$successcode = 1;
 			return redirect()->route('dailyentrys')->with('successcode', $successcode);
@@ -322,6 +332,13 @@ class MoreController extends Controller
 				'stock_g_k_sale' => $request['stock_g_k_sale'],
 				'stock_chick_sale' => $request['stock_chick_sale'],
 				'meat_percent' => $request['meat_percent'],
+				'deposit_amount_bank'=>$request['deposit_amount_bank'],
+				'deposit_amount_office'=>$request['deposit_amount_office'],
+				'expenses'=>$request['expenses'],
+				'closing_amount'=>$request['closing_amount'],
+				'opening_amount'=>$request['opening_amount'],
+				'deposit_amount_phonepay'=>$request['deposit_amount_phonepay'],
+
 			]);
 			// Shop::where('id',$request['shop_id'])->update([
 			// 	'birds_weights' => DB::raw('birds_weights - '.($request['salegwt']+$request['wt'])),
@@ -519,10 +536,21 @@ class MoreController extends Controller
 		$userdata = Session::get('userdata');
 		if ($userdata->role == 1) {
 
-			$data = DB::table('dailyentries')->leftjoin('usermanages', 'usermanages.id', '=', 'dailyentries.user_id')->leftjoin('shops', 'shops.userid', '=', 'usermanages.id')->select('dailyentries.*', 'shops.shopname')->orderBy('dailyentries.id', 'desc')->get();
+			$data = DB::table('dailyentries')
+			->leftjoin('usermanages', 'usermanages.id', '=', 'dailyentries.user_id')
+			->leftjoin('shops', 'shops.userid', '=', 'usermanages.id')
+			->select('dailyentries.*', 'shops.shopname')
+			->orderBy('dailyentries.id', 'desc')
+			->get();
 			echo json_encode($data);
 		} else {
-			$data = DB::table('dailyentries')->leftjoin('usermanages', 'usermanages.id', '=', 'dailyentries.user_id')->leftjoin('shops', 'shops.userid', '=', 'usermanages.id')->select('dailyentries.*', 'shops.shopname')->where('dailyentries.user_id', $userdata->id)->orderBy('dailyentries.id', 'desc')->get();
+			$data = DB::table('dailyentries')
+			->leftjoin('usermanages', 'usermanages.id', '=', 'dailyentries.user_id')
+			->leftjoin('shops', 'shops.userid', '=', 'usermanages.id')
+			->select('dailyentries.*', 'shops.shopname')
+			->where('dailyentries.user_id', $userdata->id)
+			->orderBy('dailyentries.id', 'desc')
+			->get();
 			echo json_encode($data);
 		}
 	}
