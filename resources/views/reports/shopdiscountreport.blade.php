@@ -143,7 +143,7 @@
 								<tr>
 									<td>{{$a->id}}</td>
 									<td>{{$a->orderno}}</td>
-									<td>{{date('m-d-Y',strtotime($a->created_at))}}</td>
+									<td>{{date('d-m-Y',strtotime($a->created_at))}}</td>
 
 									<td>
 {{$a->items}}

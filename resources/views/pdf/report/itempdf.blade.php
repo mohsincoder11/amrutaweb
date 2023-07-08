@@ -57,8 +57,8 @@
 	<p><strong>From : {{$fromdate}} &nbsp; To : {{$todate}}</strong></p>
 	<p><strong>Item : {{$itemname}}</strong></p>
 	<p><strong>Total Order : {{$itemcount}}</strong></p>
-	<p><strong>Total Kg : {{$totalkg}}</strong></p>
-	<p><strong>Total Amount : {{$totalrate}}</strong></p>
+	<p><strong>Total Kg : {{number_format($totalkg,3)}}</strong></p>
+	<p><strong>Total Amount : {{number_format($totalrate,2)}}</strong></p>
 
 	<table class="ordertable" style="margin-top: 20px;">
 		<tr style="height: 40px;text-align: left">

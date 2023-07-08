@@ -9,7 +9,7 @@
                          <div class="form-group">
                              <div class="col-md-12" align="center" style="margin-top:0px;">
                                  <h5 style="color:#000; background-color:#FFCC00; width:20%; min-height:25px; padding-top:5px;"
-                                     align="center"><span class="fa fa-rocket"></span> <strong>Fresh Chicken Admin
+                                     align="center"><span class="fa fa-rocket"></span> <strong>Amruta's Chicken Admin
                                          Webpanel</strong></h5>
                              </div>
 
@@ -108,237 +108,14 @@
 
                                      <div class="accordion" id="accordionExample">
                                          <br>
-                                         <h3>Last Five Days Shops Sales   </h3>
+                                         <h3>Last Five Days Shops Sales </h3>
 
-                                         <div class="card">
-                                             <div class="card-header" id="headingOne">
-                                                 <h5 class="mb-0">
-                                                     <button class="btn btn-block " type="button" data-toggle="collapse"
-                                                         data-target="#collapseOne" aria-expanded="true"
-                                                         aria-controls="collapseOne">
-                                                         <b>{{ date('d-m-Y', strtotime(\Carbon\Carbon::today()->subDays(0))) }} <i class="fa fa-chevron-down dashboard_icon"></i> 
-                                                         </b>
-                                                     </button>
-                                                 </h5>
-                                             </div>
-                                             <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
-                                                 data-parent="#accordionExample">
-                                                 <div class="card-body">
-                                                     <table class="table">
-                                                         <thead>
-                                                             <tr>
-                                                                 <th scope="col">Shop Name</th>
-                                                                 <th scope="col">Total Weight</th>
-                                                                 <th scope="col">Total Amount</th>
-                                                             </tr>
+                                         <div id="five_days_sale"></div>
 
-                                                         </thead>
-                                                         <tbody>
-                                                             @php
-                                                                 $date = \Carbon\Carbon::today()->subDays(-1);
-                                                                 $date2 = \Carbon\Carbon::today()->subDays(0);
-                                                                 
-                                                                 $firstday = DB::select("select s.masterid,sum(amount) as totalamount,shopname,sum(shoporderlists.weight) as totalweight from shopbookorders as s left join shops on shops.userid=s.masterid left join shoporderlists on shoporderlists.orderid=s.orderid where s.created_at <= '$date' AND s.created_at> '$date2' group by s.masterid");
-                                                                 
-                                                             @endphp
-                                                             @foreach ($firstday as $d)
-                                                                 <tr>
-                                                                     <th scope="row">{{ $d->shopname }}</th>
-                                                                     <td>{{ $d->totalweight }} kg</td>
-                                                                     <td>{{ $d->totalamount }} Rs</td>
-                                                                 </tr>
-                                                             @endforeach
 
-                                                         </tbody>
-
-                                                     </table>
-                                                 </div>
-                                             </div>
-                                         </div>
-
-                                         <div class="card">
-                                             <div class="card-header" id="headingTwo">
-                                                 <h5 class="mb-0">
-                                                     <button class="btn btn-block " type="button" data-toggle="collapse"
-                                                         data-target="#collapseTwo" aria-expanded="false"
-                                                         aria-controls="collapseTwo">
-                                                         <b>{{ date('d-m-Y', strtotime(\Carbon\Carbon::today()->subDays(1))) }}</b>
-                                                     </button>
-                                                 </h5>
-                                             </div>
-                                             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
-                                                 data-parent="#accordionExample">
-                                                 <div class="card-body">
-                                                     <table class="table">
-                                                         <thead>
-                                                             <tr>
-                                                                 <th scope="col">Shop Name</th>
-                                                                 <th scope="col">Total Weight</th>
-                                                                 <th scope="col">Total Amount</th>
-                                                             </tr>
-                                                         </thead>
-                                                         <tbody>
-                                                             @php
-                                                                 $date = \Carbon\Carbon::today()->subDays(0);
-                                                                 $date2 = \Carbon\Carbon::today()->subDays(1);
-                                                                 
-                                                                 $firstday = DB::select("select s.masterid,sum(amount) as totalamount,shopname,sum(shoporderlists.weight) as totalweight from shopbookorders as s left join shops on shops.userid=s.masterid left join shoporderlists on shoporderlists.orderid=s.orderid where s.created_at <= '$date' AND s.created_at> '$date2' group by s.masterid");
-                                                                 
-                                                             @endphp
-                                                             @foreach ($firstday as $d)
-                                                                 <tr>
-                                                                     <th scope="row">{{ $d->shopname }}</th>
-                                                                     <td>{{ $d->totalweight }} kg</td>
-                                                                     <td>{{ $d->totalamount }} Rs</td>
-                                                                 </tr>
-                                                             @endforeach
-
-                                                         </tbody>
-
-                                                     </table>
-                                                 </div>
-                                             </div>
-                                         </div>
-
-                                         <div class="card">
-                                             <div class="card-header" id="headingThree">
-                                                 <h5 class="mb-0">
-                                                     <button class="btn btn-block " type="button" data-toggle="collapse"
-                                                         data-target="#collapseThree" aria-expanded="false"
-                                                         aria-controls="collapseThree">
-                                                         <b>{{ date('d-m-Y', strtotime(\Carbon\Carbon::today()->subDays(2))) }}</b>
-                                                     </button>
-                                                 </h5>
-                                             </div>
-                                             <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
-                                                 data-parent="#accordionExample">
-                                                 <div class="card-body">
-                                                     <table class="table">
-                                                         <thead>
-                                                             <tr>
-                                                                 <th scope="col">Shop Name</th>
-                                                                 <th scope="col">Total Weight</th>
-                                                                 <th scope="col">Total Amount</th>
-                                                             </tr>
-                                                         </thead>
-                                                         <tbody>
-                                                             @php
-                                                                 $date = \Carbon\Carbon::today()->subDays(1);
-                                                                 $date2 = \Carbon\Carbon::today()->subDays(2);
-                                                                 
-                                                                 $firstday = DB::select("select s.masterid,sum(amount) as totalamount,shopname,sum(shoporderlists.weight) as totalweight from shopbookorders as s left join shops on shops.userid=s.masterid left join shoporderlists on shoporderlists.orderid=s.orderid where s.created_at <= '$date' AND s.created_at> '$date2' group by s.masterid");
-                                                                 
-                                                             @endphp
-                                                             @foreach ($firstday as $d)
-                                                                 <tr>
-                                                                     <th scope="row">{{ $d->shopname }}</th>
-                                                                     <td>{{ $d->totalweight }} kg</td>
-                                                                     <td>{{ $d->totalamount }} Rs</td>
-                                                                 </tr>
-                                                             @endforeach
-
-                                                         </tbody>
-
-                                                     </table>
-                                                 </div>
-                                             </div>
-                                         </div>
-
-                                         <div class="card">
-                                             <div class="card-header" id="headingFour">
-                                                 <h5 class="mb-0">
-                                                     <button class="btn btn-block " type="button" data-toggle="collapse"
-                                                         data-target="#collapseFour" aria-expanded="false"
-                                                         aria-controls="collapseFour">
-                                                         <b>{{ date('d-m-Y', strtotime(\Carbon\Carbon::today()->subDays(3))) }} </b>
-                                                     </button>
-                                                 </h5>
-                                             </div>
-                                             <div id="collapseFour" class="collapse" aria-labelledby="headingFour"
-                                                 data-parent="#accordionExample">
-                                                 <div class="card-body">
-                                                     <table class="table">
-                                                         <thead>
-                                                             <tr>
-                                                                 <th scope="col">Shop Name</th>
-                                                                 <th scope="col">Total Weight</th>
-                                                                 <th scope="col">Total Amount</th>
-                                                             </tr>
-                                                         </thead>
-                                                         <tbody>
-                                                             @php
-                                                                 $date = \Carbon\Carbon::today()->subDays(2);
-                                                                 $date2 = \Carbon\Carbon::today()->subDays(3);
-                                                                 
-                                                                 $firstday = DB::select("select s.masterid,sum(amount) as totalamount,shopname,sum(shoporderlists.weight) as totalweight from shopbookorders as s left join shops on shops.userid=s.masterid left join shoporderlists on shoporderlists.orderid=s.orderid where s.created_at <= '$date' AND s.created_at> '$date2' group by s.masterid");
-                                                                 
-                                                             @endphp
-                                                             @foreach ($firstday as $d)
-                                                                 <tr>
-                                                                     <th scope="row">{{ $d->shopname }}</th>
-                                                                     <td>{{ $d->totalweight }} kg</td>
-                                                                     <td>{{ $d->totalamount }} Rs</td>
-                                                                 </tr>
-                                                             @endforeach
-
-                                                         </tbody>
-
-                                                     </table>
-                                                 </div>
-                                             </div>
-                                         </div>
-
-                                         <div class="card">
-                                             <div class="card-header" id="headingFive">
-                                                 <h5 class="mb-0">
-                                                     <button class="btn btn-block " type="button" data-toggle="collapse"
-                                                         data-target="#collapseFive" aria-expanded="false"
-                                                         aria-controls="collapseFive">
-                                                         <b>{{ date('d-m-Y', strtotime(\Carbon\Carbon::today()->subDays(4))) }}</b>
-                                                     </button>
-                                                 </h5>
-                                             </div>
-                                             <div id="collapseFive" class="collapse" aria-labelledby="headingFive"
-                                                 data-parent="#accordionExample">
-                                                 <div class="card-body">
-                                                     <table class="table">
-                                                         <thead>
-                                                             <tr>
-                                                                 <th scope="col">Shop Name</th>
-                                                                 <th scope="col">Total Weight</th>
-                                                                 <th scope="col">Total Amount</th>
-                                                             </tr>
-                                                         </thead>
-                                                         <tbody>
-                                                             @php
-                                                                 $date = \Carbon\Carbon::today()->subDays(3);
-                                                                 $date2 = \Carbon\Carbon::today()->subDays(4);
-                                                                 
-                                                                 $firstday = DB::select("select s.masterid,sum(amount) as totalamount,shopname,sum(shoporderlists.weight) as totalweight from shopbookorders as s left join shops on shops.userid=s.masterid left join shoporderlists on shoporderlists.orderid=s.orderid where s.created_at <= '$date' AND s.created_at> '$date2' group by s.masterid");
-                                                                 
-                                                             @endphp
-                                                             @foreach ($firstday as $d)
-                                                                 <tr>
-                                                                     <th scope="row">{{ $d->shopname }}</th>
-                                                                     <td>{{ $d->totalweight }} kg</td>
-                                                                     <td>{{ $d->totalamount }} Rs</td>
-                                                                 </tr>
-                                                             @endforeach
-
-                                                         </tbody>
-
-                                                     </table>
-                                                 </div>
-                                             </div>
-                                         </div>
                                      </div>
                                  </div>
-
-
                              </div>
-
-
-
                          </div>
 
                      </div>
@@ -400,6 +177,9 @@
          </p>
      </div>
 
+
+    
+
  @stop
  @section('js')
 
@@ -407,6 +187,8 @@
 
      <script type="text/javascript">
          $(document).ready(function() {
+
+            $("#five_days_sale").append(' <div class="loader2">        <div class="loader-wheel"></div>        <div class="loader-text"></div>      </div>');
              $('#collapseOne').collapse('show');
 
              // Load google charts
@@ -517,6 +299,37 @@
              });
 
              $("#loader").hide();
+
+             $.ajax({
+      type: "get",
+      data:{
+        days:2
+      },
+      url: "{{url('get_shop_dashboard_data')}}",
+      datatype: "application/json",
+      success:function(data) {
+        $("#five_days_sale").html(data);
+        $("#five_days_sale").append(' <div class="loader2">        <div class="loader-wheel"></div>        <div class="loader-text"></div>      </div>');
+        get_shop_days3();
+
+      }
+    });
+
+function get_shop_days3(){
+    $.ajax({
+      type: "get",
+      data:{
+        days:3
+      },
+      url: "{{url('get_shop_dashboard_data')}}",
+      datatype: "application/json",
+      success:function(data) {
+        $("#five_days_sale").append(data);
+        $(".loader2").hide();
+      
+      }
+    });
+}
 
 
 

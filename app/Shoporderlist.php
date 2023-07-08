@@ -10,4 +10,11 @@ class Shoporderlist extends Model
     protected $fillable = [
         'orderid','itemname','weight','rate','masterid',
     ];
+
+    public function shopBookOrder()
+    {
+        return $this->belongsTo(Shopbookorder::class, 'orderid', 'orderid');
+    }
+
+
 }

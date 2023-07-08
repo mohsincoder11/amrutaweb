@@ -1,5 +1,8 @@
 <?php 
 use App\MeterReading;
+use App\Shopbookorder;
+use App\Shoporderlist;
+use Carbon\Carbon;
 function checklogins($routename=null)
 {
 
@@ -32,5 +35,19 @@ if (!function_exists('get_meter_reading')) {
 	}
 }
 
+if (!function_exists('get_five_days_record')) {
+    function get_five_days_record($date1,$date2)
+    {
+		$data=Shopbookorder::
+		whereBetween('shopbookorders.created_at',[ Carbon::today()->addDays($date1),Carbon::today()->addDays($date2)])
+		->select('shopbookorders.masterid')
+		->groupby('shopbookorders.masterid')
+		->get();
+		
+		return $data;
+		
+
+	}
+}
 
 ?>

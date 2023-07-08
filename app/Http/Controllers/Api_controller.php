@@ -130,14 +130,21 @@ class Api_controller extends Controller
 			if ($image['image'] == 'noimage.png') {
 				$new_name = 'noimage.png';
 			}
-			if ($request->hasFile('image')) {
-				if ($image['image'] != 'noimage.png') {
-					File::delete(public_path('register_user_profile/' . $image['image']));
-				}
-				$image = $request->file('image');
-				$new_name = rand() . '.' . $image->getClientOriginalExtension();
-				$image->move(public_path('register_user_profile/'), $new_name);
-			}
+			// if ($request->hasFile('image')) {
+			// 	if ($image['image'] != 'noimage.png') {
+			// 		File::delete(public_path('register_user_profile/' . $image['image']));
+			// 	}
+			// 	$image = $request->file('image');
+			// 	$new_name = rand() . '.' . $image->getClientOriginalExtension();
+			// 	$image->move(public_path('register_user_profile/'), $new_name);
+			// }
+
+			if ($request->image != 'null') {
+                $extension= explode('/', mime_content_type($request->image))[1];
+            $data = base64_decode(substr($request->image, strpos($request->image, ',') + 1));
+            $new_name='survey'.rand(000,999). time() . '.' .$extension;
+            file_put_contents(public_path('images/') . '/' . $new_name, $data);
+            }
 
 			$update = App_user::where('id', $request->id)->update([
 				//	'area_id' => $request->area_id,
@@ -505,7 +512,8 @@ class Api_controller extends Controller
 				->where('user_id', $request->user_id)->where('delivery_status', 0)
 				->where('orderfrom', 'app')
 				->select('teleorderlists.*', 'items.image')->orderby('teleorderlists.id', 'desc')->get(),
-			'wallet_credit' => $wallet_credit ? $wallet_credit->total_credit : 0
+			'wallet_credit' => $wallet_credit ? $wallet_credit->total_credit : 0,
+			'minimum_cart_value'=>200,
 		];
 
 		return response()->json($data);

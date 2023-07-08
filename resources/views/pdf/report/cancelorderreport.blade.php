@@ -57,6 +57,7 @@
 	<p><strong>Telecaller: {{ucfirst($telecallername)}}</strong></p>
 	<p><strong>From : {{$fromdate}} &nbsp; To : {{$todate}}</strong></p>
 	<p><strong>Total Order : {{$totalteleorder}}</strong></p>
+	<p><strong>Total Amount : {{$totalAmount}}</strong></p>
 	<table class="ordertable" style="margin-top: 20px;">
 		<tr style="height: 40px;text-align: left">
 			<th style="width:50px;text-align: left; padding-left: 10px;height: 40px;">Order NO</th>
@@ -72,7 +73,7 @@
 		@foreach($teleorder as $a)
 		<tr style="height: 40px; border-bottom: 1px solid black;text-align: left" >
 			<td style="width:50px;padding-left:10px;height: 40px;">{{$a->orderno}}</td>
-			<td style="width:50px;padding-left:10px;height: 40px;">{{date('m-d-Y',strtotime($a->created_at))}}</td>
+			<td style="width:50px;padding-left:10px;height: 40px;">{{date('d-m-Y',strtotime($a->created_at))}}</td>
 			<td style="width:80px;padding-left:10px;">
 				{{$a->items}}
 			</td>

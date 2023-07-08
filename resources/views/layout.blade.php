@@ -380,7 +380,6 @@
       height: 40px;
       width: 50px;
       transition:1s ease-in-out;
-
     }  
     
     .itemimage:hover {
@@ -394,6 +393,61 @@
       letter-spacing: 0px;
       font-size: 12px;
     }
+
+
+    .loader2 {
+  width: 60px;
+  margin-left: 30%; 
+
+}
+
+.loader-wheel {
+  animation: spin 1s infinite linear;
+  border-top: 8px solid blue;
+  border-right: 8px solid green;
+  border-bottom: 8px solid red;
+  border-left: 8px solid rgb(252, 241, 18);
+    border-radius: 50%;
+    margin-bottom: 10px;
+    width: 50px;
+    height: 50px;
+    /* position: absolute;
+    top: 75%;*/
+}
+
+.loader-text {
+  color: #fff;
+  font-family: arial, sans-serif;
+}
+
+.loader-text:after {
+  content: 'Loading';
+  animation: load 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes load {
+  0% {
+    content: 'Loading';
+  }
+  33% {
+    content: 'Loading.';
+  }
+  67% {
+    content: 'Loading..';
+  }
+  100% {
+    content: 'Loading...';
+  }
+}
   </style>
   <style>
     .switchss {
@@ -551,7 +605,7 @@
       <!-- START X-NAVIGATION VERTICAL -->
       <ul class="x-navigation x-navigation-horizontal">
         <li class="xn-logo" style="margin-right:30px;">
-          <a> <img src="{{asset('public/logo/logo.png')}}" alt="EMR - OPD Software" style="margin-top:-15px;" /></a>
+          <a href="{{route('home')}}"> <img src="{{asset('public/logo/logo.png')}}" alt="" style="margin-top:-15px;" /></a>
           <a href="#" class="x-navigation-control"></a>
         </li>
 

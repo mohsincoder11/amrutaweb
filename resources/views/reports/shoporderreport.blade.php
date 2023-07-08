@@ -87,6 +87,8 @@
 										<input type="hidden" name="shopid" value="{{$shopid}}">
 										<input type="hidden" name="shopordercount" id="shopordercount" value="{{$shopordercount}}">
 										<input type="hidden" name="shopname" value="@if($shopname) {{$shopname['shopname']}} @endif">
+										<input type="hidden" name="totalAmount" value="{{isset($totalAmount) ? round($totalAmount) : 0}}">
+										
 										<button type="submit" class="btn btn-warning col-md-6 printshoporder"><span class="fa fa-print"></span> Print</button>
 									</div>
 
@@ -122,7 +124,7 @@
 						<h3 style="margin-top: 10px;text-align: center">From :{{$fromdatepage ?? ''}} &nbsp; To :{{$todatepage ?? ''}} </h3>
 						<h3 style="margin-top: 10px;text-align: center;color: black;">Shop :
 							@if($shopname) {{ucfirst($shopname['shopname'])}}@endif
-							&nbsp; Total Order :{{$shopordercount}}&nbsp; Total Weight :{{number_format((float)$totalweight, 4, '.', '')}} </h3>
+							&nbsp; Total Order :{{$shopordercount}}&nbsp; Total Weight :{{number_format((float)$totalweight, 4, '.', '')}} &nbsp;Total Amount :{{isset($totalAmount) ? number_format(round($totalAmount)) : 0}} </h3>
 					</div>
 
 					<table class="table" id="shoporder">
@@ -139,15 +141,18 @@
 							</tr>
 						</thead>
 						<tbody>
-							<?php
-							if ($shoporder != null) {
-							?>
-
+							@php
+								$total_amount=0;
+							@endphp
+							@if ($shoporder != null) 
 								@foreach($shoporder as $a)
+								@php
+									$total_amount+=$a->amount;
+								@endphp
 								<tr>
 									<td>{{$a->id}}</td>
 									<td>{{$a->orderno}}</td>
-									<td> {{date('m-d-Y',strtotime($a->created_at))}}
+									<td> {{date('d-m-Y',strtotime($a->created_at))}}
 									</td>
 									<td>
 										@if($a->shopname)
@@ -157,19 +162,28 @@
 										@endif
 									</td>
 									<td>
-										{{$a->items}}
+										@if(isset($a->shopOrderLists))
+
+                                        @foreach ($a->shopOrderLists as $teleorderlist1)
+                                        {{ $teleorderlist1->items }}
+                                    @endforeach
+                                    @endif
+										
 
 									</td>
 									<td>
-										{{$a->weights}} Kg
+										@if(isset($a->shopOrderLists))
+
+                                        @foreach ($a->shopOrderLists as $teleorderlist1)
+                                        {{ $teleorderlist1->weights }} KG
+                                    @endforeach
+                                    @endif
 									</td>
 									<td>{{$a->amount}}</td>
 								</tr>
 								@endforeach
 
-							<?php
-							}
-							?>
+							@endif
 
 
 						</tbody>

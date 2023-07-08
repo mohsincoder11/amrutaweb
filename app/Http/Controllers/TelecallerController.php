@@ -52,13 +52,18 @@ class TelecallerController extends Controller
 			}
 			// echo json_encode($this->data['randno']);
 			// exit();
-			return view('Telecaller/bookorder', $this->data);
+			return view('Telecaller.bookorder', $this->data);
 		} else {
 			return redirect()->route('login');
 		}
 	}
-	public function teleorder()
+
+	public function teleorder(Request $request)
 	{
+$date=date('Y-m-d');
+if(isset($request->date) && $request->date!=null){
+	$date= date('Y-m-d',strtotime($request->date));
+}
 
 		$userdata = session::get('userdata');
 
@@ -66,7 +71,7 @@ class TelecallerController extends Controller
 			$otherdata = DB::table('telebookorders')->leftjoin('shops', 'shops.id', '=', 'telebookorders.shopname')
 				->select('telebookorders.*', 'shops.shopname')
 				->where('telebookorders.orderfrom','telecaller')
-				->whereRaw('DATE(telebookorders.created_at) = ?', date('Y-m-d'))
+				->whereRaw('DATE(telebookorders.created_at) = ?', $date)
 				->orderby('telebookorders.id', 'desc')->get();
 		} else {
 
@@ -74,7 +79,7 @@ class TelecallerController extends Controller
 				->select('telebookorders.*', 'shops.shopname')
 				->where('telebookorders.masterid', $userdata['id'])
 				->where('telebookorders.orderfrom','telecaller')
-				->whereRaw('DATE(telebookorders.created_at) = ?', date('Y-m-d'))
+				->whereRaw('DATE(telebookorders.created_at) = ?', $date)
 				->orderby('telebookorders.id', 'desc')->get();
 		}
 		//exit();
@@ -101,12 +106,12 @@ class TelecallerController extends Controller
 		if ($userdata['telecaller'] == 1) {
 			if ($userdata['role'] == 1) {
 
-				$this->data['teleorderlist'] = Teleorderlist::whereRaw('DATE(created_at) = ?', date('Y-m-d'))
+				$this->data['teleorderlist'] = Teleorderlist::whereRaw('DATE(created_at) = ?', $date)
 				
 				->get();
 			} else {
 
-				$this->data['teleorderlist'] = Teleorderlist::whereRaw('DATE(created_at) = ?', date('Y-m-d'))
+				$this->data['teleorderlist'] = Teleorderlist::whereRaw('DATE(created_at) = ?', $date)
 				->where('masterid', $userdata['id'])->get();
 			}
 			$this->data['teleorder'] = $otherdata;
@@ -115,6 +120,7 @@ class TelecallerController extends Controller
 			return redirect()->route('login');
 		}
 	}
+	
 	public function getamount(Request $request)
 	{
 		$this->data['amount'] = Item::where('id', $request->id)->first();

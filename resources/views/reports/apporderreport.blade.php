@@ -69,6 +69,7 @@
                                         <input type="hidden" name="apporderweight" id="apporderweight" value="{{number_format((float)$apporderweight, 2, '.', '') ?? ''}}">
                                         <input type="hidden" name="todate" id="printtodate" value="{{$todatepage ?? ''}}">
                                         <input type="hidden" name="appordercount" id="appordercount" value="{{$appordercount}}">
+                                        <input name="totalAmount" type="hidden" value="{{$totalAmount ?? 0}}">
 
                                         <button type="submit" class="btn btn-warning col-md-6 printapporder"><span class="fa fa-print"></span> Print</button>
                                     </div>
@@ -105,7 +106,7 @@
                 <div class="panel-body" style="margin-top:-10px; margin-bottom:-15px;">
                     <div class="row">
                         <h3 style="margin-top: 10px;text-align: center">From :{{date('d-m-Y',strtotime($fromdatepage)) }} &nbsp; To :{{date('d-m-Y',strtotime($todatepage)) }} </h3>
-                        <h3 style="margin-top: 10px;text-align: center;color: black;"> Total Order :{{$appordercount}} &nbsp; Total Weight :{{number_format((float)$apporderweight, 2, '.', '')}} KG </h3>
+                        <h3 style="margin-top: 10px;text-align: center;color: black;"> Total Order :{{$appordercount}} &nbsp; Total Weight :{{number_format((float)$apporderweight, 2, '.', '')}} KG &nbsp;Total Amount :{{isset($totalAmount) ? number_format(round($totalAmount)) : 0}} </h3>
                     </div>
 
                     <table class="table" id="apporder">
@@ -130,7 +131,7 @@
                                 <tr>
                                     <td>{{$a->id}}</td>
                                     <td>{{$a->orderno}}</td>
-                                    <td> {{date('m-d-Y',strtotime($a->created_at))}}
+                                    <td> {{date('d-m-Y',strtotime($a->created_at))}}
                                     </td>
 
                                     <td>
@@ -139,12 +140,22 @@
 
                                     </td>
                                     <td>
-                                        {{$a->items}}
+                                        @if(isset($a->teleorderlists))
+
+                                        @foreach ($a->teleorderlists as $teleorderlist1)
+                                        {{ $teleorderlist1->items }}
+                                    @endforeach
+                                    @endif
+                                       
 
 
                                     </td>
                                     <td>
-                                        {{$a->weights}} Kg
+                                        @if(isset($a->teleorderlists))
+                                        @foreach ($a->teleorderlists as $teleorderlist2)
+                                        {{ $teleorderlist2->weights }} KG
+                                    @endforeach
+                                    @endif
 
                                     </td>
                                     <td>{{$a->amount}}</td>

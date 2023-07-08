@@ -61,6 +61,7 @@
 	<p><strong>From : {{$fromdate}} &nbsp; To : {{$todate}}</strong></p>
 	<p><strong>Total Order : {{$totalteleorder}}</strong></p>
 	<p><strong>Total Weight : {{number_format((float)$teleorderweight, 2, '.', '') ?? ''}} KG</strong></p>
+	<p><strong>Total Amount : {{number_format((float)$totalAmount, 2, '.', '') ?? ''}} </strong></p>
 
 
 	<table class="ordertable" style="margin-top: 20px;">
@@ -76,7 +77,7 @@
 		@foreach($teleorder as $t)
 		<tr style="height: 40px; border-bottom: 1px solid black;text-align: left" >
 			<td style="width:50px;">{{$t->orderno}}</td>
-			<td style="width:50px;">											{{date('m-d-Y',strtotime($t->created_at))}}
+			<td style="width:50px;">											{{date('d-m-Y',strtotime($t->created_at))}}
 </td>
 			<td style="width:70px;">
 				

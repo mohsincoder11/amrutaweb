@@ -117,7 +117,7 @@
 
 				<h5 class="panel-title" style="color:#FFFFFF; background-color:#613660; width:100%; font-size:14px;" align="center"><i class="fa fa-shopping-cart"></i> Delivery Boy Orders</h5>
 				<div class="panel-body" style="margin-top:-10px; margin-bottom:-15px;">
-					<div class="row" ><h3 style="margin-top: 10px;text-align: center">From :{{$fromdatepage ?? ''}} &nbsp; To :{{$todatepage ?? ''}} </h3><h3 style="margin-top: 10px;text-align: center;color: black;">Delivery Boy :{{ucfirst($deliveryboyid)}} &nbsp;Total Order :{{$deliveryboyordercount}}
+					<div class="row" ><h3 style="margin-top: 10px;text-align: center">From :{{$fromdatepage ?? ''}} &nbsp; To :{{$todatepage ?? ''}} </h3><h3 style="margin-top: 10px;text-align: center;color: black;">Delivery Boy :{{ucfirst($deliveryboyid)}} &nbsp;Total Order :{{$deliveryboyordercount}} &nbsp;Total Amount :{{isset($totalAmount) ? number_format($totalAmount,2) : ''}} 
 					</h3></div>
 
 					<table class="table" id="deliveryboyorder">
@@ -144,7 +144,7 @@
 								<tr>
 									<td>{{$a->id}}</td>
 									<td>{{$a->orderno}}</td>
-									<td>{{date('m-d-Y',strtotime($a->created_at))}}</td>
+									<td>{{date('d-m-Y',strtotime($a->created_at))}}</td>
 
 									<td>
 										{{$a->items}}
@@ -168,7 +168,7 @@
 								<tr>
 									<td>{{$a->id}}</td>
 									<td>{{$a->orderno}}</td>
-									<td>{{date('m-d-Y',strtotime($a->created_at))}}</td>
+									<td>{{date('d-m-Y',strtotime($a->created_at))}}</td>
 
 									<td>
 										{{$a->items}}

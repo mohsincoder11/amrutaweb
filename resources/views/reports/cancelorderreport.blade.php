@@ -86,7 +86,8 @@
 										<?php endif ?>">
 										<input type="hidden" name="teleid" value="{{$telecallerid}}">
 										<input type="hidden" name="teleordercount" id="teleordercount" value="{{$teleordercount}}">
-
+										<input type="hidden" name="totalAmount" id="totalAmount" value="{{$totalAmount ?? 0}}">
+										
 										<button type="submit" class="btn btn-warning col-md-6 printtelecallerorder"><span class="fa fa-print"></span> Print</button>
 									</div>
 
@@ -119,7 +120,7 @@
 				<h5 class="panel-title" style="color:#FFFFFF; background-color:#c93f18; width:100%; font-size:14px;" align="center"><i class="fa fa-remove"></i> Cancel Orders</h5>
 				<div class="panel-body" style="margin-top:-10px; margin-bottom:-15px;">
 					<div class="row" ><h3 style="margin-top: 10px;text-align: center">From :{{$fromdatepage ?? ''}} &nbsp; To :{{$todatepage ?? ''}} </h3>
-						<h3 style="margin-top: 10px;text-align: center;color: black;">Telecaller :{{ucfirst($telecallername) ?? ''}} &nbsp; Total Order :{{$teleordercount}} </h3></div>
+						<h3 style="margin-top: 10px;text-align: center;color: black;">Telecaller :{{ucfirst($telecallername) ?? ''}} &nbsp; Total Order :{{$teleordercount}}  &nbsp; Total Amount :{{isset($totalAmount ) ? number_format($totalAmount , 2): 0}} </h3></div>
 
 						<table class="table" id="telecallerorder">
 							<thead>
@@ -143,7 +144,7 @@
 									<tr>
 										<td>{{$a->id}}</td>
 										<td>{{$a->orderno}}</td>
-										<td>{{date('m-d-Y',strtotime($a->created_at))}}</td>
+										<td>{{date('d-m-Y',strtotime($a->created_at))}}</td>
 
 										<td>
 											{{$a->items}}

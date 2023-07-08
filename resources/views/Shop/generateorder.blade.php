@@ -315,7 +315,7 @@
       } else {
         var mobile = ($("#mobile").val()).length;
         if (mobile == 10) {
-
+          $(".generateorderbutton").prop('disabled',true);
           $.ajax({
             type: "get",
             url: "{{Route('insertshoporder')}}",

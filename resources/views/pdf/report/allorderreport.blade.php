@@ -61,6 +61,8 @@
 	<p><strong>From : {{$fromdate}} &nbsp; To : {{$todate}}</strong></p>
 	<p><strong>Total Order : {{$allordercount}}</strong></p>
 	<p><strong>Total Weight : {{$totalweight}}</strong></p>
+	<p><strong>Total Amount : {{$totalAmount}}</strong></p>
+	
 
 	<table class="ordertable" style="margin-top: 20px;">
 		<tr style="height: 40px;text-align: left">
@@ -74,13 +76,13 @@
 		@foreach($teleorder as $t)
 		<tr style="height: 40px; border-bottom: 1px solid black;text-align: left">
 			<td style="width:50px;padding-left:10px;height: 40px;">{{$t->orderno}}</td>
-			<td style="width:50px;padding-left:10px;height: 40px;"> {{date('m-d-Y',strtotime($t->created_at))}}
+			<td style="width:50px;padding-left:10px;height: 40px;"> {{date('d-m-Y',strtotime($t->created_at))}}
 			</td>
 			<td style="width:80px;padding-left:10px;">
 				{{$t->items}}
 			</td>
 			<td style="width:80px;padding-left:10px;">
-				{{$t->weights}} Kg
+				{{$t->weights}} KG
 			</td>
 
 			<td style="width:10px;padding-left:10px;"> {{$t->amount}}</td>
@@ -89,15 +91,26 @@
 		@endforeach
 
 		@foreach($apporder as $t)
+
 		<tr style="height: 40px; border-bottom: 1px solid black;text-align: left">
 			<td style="width:50px;padding-left:10px;height: 40px;">{{$t->orderno}}</td>
-			<td style="width:50px;padding-left:10px;height: 40px;"> {{date('m-d-Y',strtotime($t->created_at))}}
+			<td style="width:50px;padding-left:10px;height: 40px;"> {{date('d-m-Y',strtotime($t->created_at))}}
 			</td>
 			<td style="width:80px;padding-left:10px;">
-				{{$t->items}}
+				 @if(isset($t->teleorderlists))
+
+                                            @foreach ($t->teleorderlists as $teleorderlist1)
+                                            {{ $teleorderlist1->items }}
+                                        @endforeach
+                                        @endif
 			</td>
 			<td style="width:80px;padding-left:10px;">
-				{{$t->weights}} Kg
+				  @if(isset($t->teleorderlists))
+
+                                        @foreach ($t->teleorderlists as $teleorderlist1)
+                                        {{ $teleorderlist1->weights }}KG
+                                    @endforeach
+                                    @endif
 			</td>
 
 			<td style="width:10px;padding-left:10px;"> {{$t->amount}}</td>
@@ -107,15 +120,26 @@
 
 
 		@foreach($shoporder as $s)
+
 		<tr style="height: 40px; border-bottom: 1px solid black;text-align: left">
 			<td style="width:50px;padding-left:10px;height: 40px;">{{$s->orderno}}</td>
-			<td style="width:50px;padding-left:10px;height: 40px;"> {{date('m-d-Y',strtotime($s->created_at))}}
+			<td style="width:50px;padding-left:10px;height: 40px;"> {{date('d-m-Y',strtotime($s->created_at))}}
 			</td>
 			<td style="width:80px;padding-left:10px;">
-				{{$s->items}}
+				@if(isset($s->shopOrderLists))
+
+				@foreach ($s->shopOrderLists as $teleorderlist1)
+				{{ $teleorderlist1->items }}
+			@endforeach
+			@endif
 			</td>
 			<td style="width:80px;padding-left:10px;">
-				{{$s->weights}}
+				@if(isset($s->shopOrderLists))
+
+				@foreach ($s->shopOrderLists as $teleorderlist1)
+				{{ $teleorderlist1->weights }} KG
+			@endforeach
+			@endif
 			</td>
 
 			<td style="width:10px;padding-left:10px;"> {{$s->amount}}</td>

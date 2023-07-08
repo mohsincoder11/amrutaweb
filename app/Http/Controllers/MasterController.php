@@ -130,6 +130,11 @@ class MasterController extends Controller
 
 		return view('master/additem');
 	}
+	public function additem2()
+	{
+
+		return view('master/additem2');
+	}
 	public function insertitem(Request $request)
 	{
 		$userdata = Session::get('userdata');
@@ -155,7 +160,7 @@ class MasterController extends Controller
 			]);
 			$successcode = 'insert';
 
-			return redirect()->route('additem')->with('successcode', $successcode);
+			return redirect()->back()->with('successcode', $successcode);
 		}
 		if ($request['inputmode'] == 'update') {
 			$data = Item::find($request->updateid);
@@ -182,7 +187,7 @@ class MasterController extends Controller
 			]);
 			$successcode = 'update';
 
-			return redirect()->route('additem')->with('successcode', $successcode);
+			return redirect()->back()->with('successcode', $successcode);
 		}
 	}
 	public function update_stock(Request $request)

@@ -83,23 +83,28 @@ class ShopController extends Controller
 		echo json_encode($request->id);
 	}
 
-	public function shoporder()
+	public function shoporder(Request $request)
 	{
+		$date=date('Y-m-d');
+if(isset($request->date) && $request->date!=null){
+	$date= date('Y-m-d',strtotime($request->date));
+}
+
 		$userdata = Session::get('userdata');
 		if ($userdata['shop'] == 1) {
 			if ($userdata['role'] == 1 || $userdata['role'] == 3) {
-				$this->data['shop'] = Shopbookorder::whereRaw('DATE(created_at) = ?', date('Y-m-d'))
+				$this->data['shop'] = Shopbookorder::whereRaw('DATE(created_at) = ?',$date)
 					->orderby('id', 'desc')->get();
 				// echo json_encode($this->data['shop']);
 				// exit();
-				$this->data['orderlist'] = Shoporderlist::whereRaw('DATE(created_at) = ?', date('Y-m-d'))
+				$this->data['orderlist'] = Shoporderlist::whereRaw('DATE(created_at) = ?',$date)
 					->get();
 			} else {
-				$this->data['shop'] = Shopbookorder::where('masterid', $userdata['id'])->whereRaw('DATE(created_at) = ?', date('Y-m-d'))
+				$this->data['shop'] = Shopbookorder::where('masterid', $userdata['id'])->whereRaw('DATE(created_at) = ?',$date)
 					->orderby('id', 'desc')->get();
 				// echo json_encode($this->data['shop']);
 				// exit();
-				$this->data['orderlist'] = Shoporderlist::whereRaw('DATE(created_at) = ?', date('Y-m-d'))
+				$this->data['orderlist'] = Shoporderlist::whereRaw('DATE(created_at) = ?',$date)
 					->get();
 			}
 
@@ -268,6 +273,7 @@ class ShopController extends Controller
 				}
 				//echo json_encode($ordernofor).'<br>';
 				$x = 0;
+				$newno=[];
 				foreach ($ordernofor as $o) {
 					$newno[$x] = $o['orderno'];
 					$x++;
@@ -529,15 +535,19 @@ class ShopController extends Controller
 		return view('Shop.apporders', $this->data);
 	}
 
-	public function apporders()
+	public function apporders(Request $request)
 	{
-		Telebookorder::whereRaw('DATE(created_at) = ?', date('Y-m-d'))
+		$date=date('Y-m-d');
+if(isset($request->date) && $request->date!=null){
+	$date= date('Y-m-d',strtotime($request->date));
+}
+		Telebookorder::whereRaw('DATE(created_at) = ?', $date)
 			->where('orderfrom', 'app')
 			->update(['view_status' => 1]);
 
 		$userdata = Session::get('userdata');
 		if ($userdata['role'] == 1 || $userdata['role'] == 3) {
-			$this->data['apporder'] = Telebookorder::whereRaw('DATE(created_at) = ?', date('Y-m-d'))
+			$this->data['apporder'] = Telebookorder::whereRaw('DATE(created_at) = ?', $date)
 				->where('orderfrom', 'app')->orderby('id', 'desc')->get();
 		} else {
 			$shop_session = Session::get('shopinfo');
@@ -545,16 +555,16 @@ class ShopController extends Controller
 				$assign_area = Assign_area::select('assign_area')->where('shop_id', $shop_session['id'])->first();
 				if ($assign_area) {
 					$assign_area = explode(',', $assign_area['assign_area']);
-					$this->data['apporder'] = Telebookorder::whereRaw('DATE(created_at) = ?', date('Y-m-d'))
+					$this->data['apporder'] = Telebookorder::whereRaw('DATE(created_at) = ?', $date)
 						->where('shopname', $shop_session['id'])
 						->where('orderfrom', 'app')->orderby('id', 'desc')->get();
 				} else {
-					$this->data['apporder'] = Telebookorder::whereRaw('DATE(created_at) = ?', date('Y-m-d'))
+					$this->data['apporder'] = Telebookorder::whereRaw('DATE(created_at) = ?', $date)
 						->where('area_id', 000)
 						->where('orderfrom', 'app')->orderby('id', 'desc')->get();;
 				}
 			} else {
-				$this->data['apporder'] = Telebookorder::whereRaw('DATE(created_at) = ?', date('Y-m-d'))
+				$this->data['apporder'] = Telebookorder::whereRaw('DATE(created_at) = ?', $date)
 					->where('area_id', 000)
 					->where('orderfrom', 'app')->orderby('id', 'desc')->get();
 			}

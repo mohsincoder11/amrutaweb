@@ -13,4 +13,15 @@ class Telebookorder extends Model
         'status', 'assignto', 'deliveryboyid', 'orderfrom', 'time_slot', 'delivery_charge'
     ];
     protected $dates = ['expired_at'];
+
+    public function teleorderlists()
+    {
+        return $this->hasMany(Teleorderlist::class, 'orderid');
+    }
+
+    public function specialteleorderlists()
+    {
+        
+        return $this->hasMany(Teleorderlist::class, 'orderid', 'orderid');
+    }
 }

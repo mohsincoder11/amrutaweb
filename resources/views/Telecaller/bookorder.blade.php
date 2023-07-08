@@ -636,6 +636,7 @@
         if (fullname > 0) {
           if (mobile > 9 && mobile < 11) {
             if (address > 0) {
+              $(".bookorderbutton").prop("disabled", true);
               $.ajax({
                 type: "get",
                 url: "{{Route('insertteleorder')}}",

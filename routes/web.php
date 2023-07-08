@@ -84,6 +84,8 @@ Route::get('bookorder','TelecallerController@bookorder')->name('bookorder');
 Route::get('teleorder','TelecallerController@teleorder')->name('teleorder');
 Route::get('tele_app_orders','TelecallerController@tele_app_orders')->name('tele_app_orders');
 
+Route::get('item-master','MasterController@additem2')->name('item-master');
+
 });
 
 //login
@@ -218,7 +220,7 @@ Route::get('printdemo','TelecallerController@printdemo')->name('printdemo');
 
 //Report
 Route::post('printallorder','Report@printallorder')->name('printallorder');
-Route::get('allorderreports','Report@allorderreports')->name('allorderreports');
+Route::post('allorderreports','Report@allorderreports')->name('allorderreports');
 //-------------------
 Route::post('printtelecallerorder','Report@printtelecallerorder')->name('printtelecallerorder');
 Route::post('telecallerorderreports','Report@telecallerorderreports')->name('telecallerorderreports');
@@ -324,6 +326,8 @@ Route::get('editgtog','MoreController@editgtog')->name('editgtog');
 Route::get('gtognew','Live_bird_transfer@gtognew')->name('gtognew');
 Route::get('stognew','Live_bird_transfer@stognew')->name('stognew');
 Route::get('stosnew','Live_bird_transfer@stosnew')->name('stosnew');
+
+Route::get('get_shop_dashboard_data','AdminController@get_shop_dashboard_data')->name('get_shop_dashboard_data');
 
 
 

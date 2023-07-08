@@ -18,6 +18,7 @@ use App\Area_master;
 
 use App\App_cancel_order;
 use Hash, DB, Session;
+use Carbon\Carbon;
 
 
 class AdminController extends Controller
@@ -25,8 +26,22 @@ class AdminController extends Controller
 	//
 	public function login()
 	{
+		//Usermanage::find(1)->update(['password'=>Hash::make('12345')]);
+		// Usermanage::create([
+		// 	'email'=>'testuser@gmail.com',
+		// 	'username'=>'testuser',
+		// 	'role'=>6,
+		// 	'master'=>0,
+		// 	'shop'=>0,
+		// 	'telecaller'=>0,
+		// 	'report'=>0,
+		// 	'uniqueprefix'=>'abc',
+
+		// 	'password'=>Hash::make(123456)
+		// ]);
 		return view('login');
 	}
+	
 	public function checklogin(Request $request)
 	{
 		$user = Usermanage::where(['username' => $request->username])->first();
@@ -35,7 +50,6 @@ class AdminController extends Controller
 			$roledata = Session::get('userdata');
 			if ($roledata['role'] == 2) {
 				$shopinfo = Shop::where('userid', $roledata['id'])->first();
-
 				session::put('shopinfo', $shopinfo);
 			}
 			if ($roledata['role'] == 1) {
@@ -49,7 +63,11 @@ class AdminController extends Controller
 			}
 			if ($roledata['role'] == 5 || $roledata['role'] == 1) {
 				return redirect()->route('godowntogodown');
-			} else {
+			} 
+			if ($roledata['role'] == 6 || $roledata['role'] == 1) {
+				return redirect()->route('item-master');
+			} 
+			else {
 				return redirect()->route('login');
 			}
 		} else {
@@ -142,8 +160,8 @@ class AdminController extends Controller
 	{
 		$user = Session::get('userdata');
 		if ($user['role'] == 1) {
-			$this->data['totalteleorder'] = DB::table('telebookorders')->where('orderfrom', 'telecaller')->count();
-			$this->data['apporder'] = DB::table('telebookorders')->where('orderfrom', 'app')->count();
+			$this->data['totalteleorder'] = Telebookorder::where('orderfrom', 'telecaller')->count();
+			$this->data['apporder'] = Telebookorder::where('orderfrom', 'app')->count();
 			$this->data['totalshoporder'] = DB::table('shopbookorders')->count();
 			$this->data['totalcancelorder'] = App_cancel_order::count();
 			$this->data['totalordercomplete'] = Telebookorder::where('collectedcash', '>', '0')->count();
@@ -184,7 +202,7 @@ class AdminController extends Controller
 			} else {
 				$this->data['totalaveragetime'] = 0;
 			}
-
+			
 				return view('home', $this->data);
 		}
 		if ($user['role'] == 2) {
@@ -455,5 +473,12 @@ class AdminController extends Controller
 			
 }
 
+public function get_shop_dashboard_data(Request $request){
+	$producthtml = view('two_day_sale')->render();
+	if($request->days==3){
+		$producthtml = view('three_day_sale')->render();
+	}
+		return $producthtml;
+	}
 
 }

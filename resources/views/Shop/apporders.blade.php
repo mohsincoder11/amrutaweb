@@ -55,7 +55,7 @@
               </tr>
             </thead>
             <tbody>
-              <?php $i = 0; ?>
+             
               @foreach($apporder as $s)
               <tr>
                 <td style="display: none">{{$s['id']}}</td>
@@ -183,7 +183,7 @@
                   } ?>
                 </td>
               </tr>
-              <?php $i++; ?>
+             
               @endforeach
 
 

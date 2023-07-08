@@ -62,7 +62,6 @@
     <p><strong>From : {{date('d-m-Y',strtotime($fromdate)) }} &nbsp; To : {{date('d-m-Y',strtotime($todate)) }}</strong></p>
     <p><strong>Total Order : {{$appordercount}}</strong></p>
     <p><strong>Total Weight : {{number_format((float)$apporderweight, 2, '.', '') ?? ''}} KG</strong></p>
-    <p><strong>Total Amount : {{number_format((float)$totalAmount, 2, '.', '') ?? ''}} </strong></p>
 
 
     <table class="ordertable" style="margin-top: 20px;">
@@ -78,7 +77,7 @@
         @foreach($apporder as $t)
         <tr style="height: 40px; border-bottom: 1px solid black;text-align: left">
             <td style="width:50px;">{{$t->orderno}}</td>
-            <td style="width:50px;"> {{date('d-m-Y',strtotime($t->created_at))}}
+            <td style="width:50px;"> {{date('m-d-Y',strtotime($t->created_at))}}
             </td>
             <td style="width:70px;">
 
@@ -86,19 +85,10 @@
             </td>
             <td style="width:80px;">
 
-                 @if(isset($t->teleorderlists))
-
-                                        @foreach ($t->teleorderlists as $teleorderlist1)
-                                        {{ $teleorderlist1->items }}
-                                    @endforeach
-                                    @endif
+                {{$t->items}}
             </td>
             <td style="width:40px;padding-left:10px;">
-                @if(isset($t->teleorderlists))
-                                        @foreach ($t->teleorderlists as $teleorderlist2)
-                                        {{ $teleorderlist2->weights }} KG
-                                    @endforeach
-                                    @endif
+                {{$t->weights}} Kg
 
             </td>
 

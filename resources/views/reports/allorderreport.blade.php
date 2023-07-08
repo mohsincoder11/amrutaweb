@@ -90,6 +90,8 @@
                                                 value="{{ $allordercount }}">
                                             <input type="hidden" name="totalweight"
                                                 value="{{ number_format((float) $totalweight, 2, '.', '') }}">
+                                                <input type="hidden" name="totalAmount"
+                                                value="{{ $totalAmount ?? 0 }}">
                                             <button type="submit" class="btn btn-warning col-md-6 printallorder"><span
                                                     class="fa fa-print"></span> Print</button>
                                         </div>
@@ -127,7 +129,7 @@
                             <h3 style="margin-top: 10px;text-align: center">From :{{ $fromdatepage ?? '' }} &nbsp; To
                                 :{{ $todatepage ?? '' }} </h3>
                             <h3 style="margin-top: 10px;text-align: center;color: black;">Total Order :{{ $allordercount }}
-                                &nbsp;Total Weight :{{ number_format((float) $totalweight, 2, '.', '') }} KG </h3>
+                                &nbsp;Total Weight :{{ number_format((float) $totalweight, 2, '.', '') }} KG &nbsp;Total Amount :{{ isset($totalAmount) ? number_format($totalAmount, 2, '.', '') : 0 }} </h3>
                         </div>
 
                         <table class="table" id="allorder">
@@ -161,7 +163,7 @@
 
                                         </td>
                                         <td>
-                                            {{ $a->weights }} Kg
+                                            {{ $a->weights }} KG
 
 
 
@@ -178,11 +180,21 @@
                                         </td>
 
                                         <td>
-                                            {{ $a->items }}
+                                         @if(isset($a->teleorderlists))
+
+                                            @foreach ($a->teleorderlists as $teleorderlist1)
+                                            {{ $teleorderlist1->items }}
+                                        @endforeach
+                                        @endif
 
                                         </td>
                                         <td>
-                                            {{ $a->weights }} Kg
+                                            @if(isset($a->teleorderlists))
+
+                                        @foreach ($a->teleorderlists as $teleorderlist1)
+                                        {{ $teleorderlist1->weights }}KG
+                                    @endforeach
+                                    @endif
 
 
 
@@ -197,11 +209,21 @@
                                         <td>{{ date('m-d-Y', strtotime($a->created_at)) }}</td>
 
                                         <td>
-                                            {{ $a->items }}
+                                            @if(isset($a->shopOrderLists))
+
+                                            @foreach ($a->shopOrderLists as $teleorderlist1)
+                                            {{ $teleorderlist1->items }}
+                                        @endforeach
+                                        @endif
 
                                         </td>
                                         <td>
-                                            {{ $a->weights }} Kg
+                                            @if(isset($a->shopOrderLists))
+
+                                            @foreach ($a->shopOrderLists as $teleorderlist1)
+                                            {{ $teleorderlist1->weights }}KG 
+                                        @endforeach
+                                        @endif
 
 
                                         </td>
