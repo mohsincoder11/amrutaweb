@@ -18,15 +18,14 @@
 
 
                             <div class="row">
-                                <div class="col-md-1"></div>
-                                <div class="col-md-7">
+                                <div class="col-md-12">
                                     <form method="POST" action="{{ url('telecallerorderreports') }}"
                                         class="form-horizontal" name="form" id="form" enctype="multipart/form-data">
                                         {{ csrf_field() }}
-                                        <div class="col-md-12">
+                                        <div class="row">
                                             <div class="form-group" style="margin-top:-10px;">
 
-                                                <div class="col-md-3"
+                                                <div class="col-md-2"
                                                     style="margin-top:15px; padding-left:5px; padding-right:2px;">
                                                     <label>Start Date<font color="#FF0000"></font></label>
                                                     <div class="input-group">
@@ -39,7 +38,8 @@
                                                     </div>
 
                                                 </div>
-                                                <div class="col-md-3"
+
+                                                <div class="col-md-2"
                                                     style="margin-top:15px; padding-left:5px; padding-right:2px;">
                                                     <label>To Date<font color="#FF0000"></font></label>
                                                     <div class="input-group">
@@ -52,7 +52,8 @@
                                                     </div>
 
                                                 </div>
-                                                <div class="col-md-3"
+
+                                                <div class="col-md-2"
                                                     style="margin-top:15px; padding-left:5px; padding-right:2px;">
                                                     <label>Select Telecaller<font color="#FF0000"></font></label>
                                                     <div class="input-group">
@@ -61,7 +62,7 @@
                                                             <option value="all">All</option>
 
                                                             @foreach ($telecaller as $d)
-                                                                <option value="{{ $d->id }}">{{ $d->username }}
+                                                                <option  @if(isset($telecallerid) && $telecallerid==$d->id) selected @endif value="{{ $d->id }}">{{ $d->username }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -69,10 +70,27 @@
 
                                                 </div>
 
+                                                <div class="col-md-2"
+                                                style="margin-top:15px; padding-left:5px; padding-right:2px;">
+                                                <label>Select Shop<font color="#FF0000"></font></label>
+                                                <div class="input-group">
+                                                    <select name="shopname" data-live-search="true" id="assignto"
+                                                        class="select">
+                                                        <option value="all">All</option>
+
+                                                        @foreach ($shops as $shop)
+                                                            <option @if(isset($shopname) && $shopname==$shop->id) selected @endif value="{{ $shop->id }}">{{ $shop->shopname }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+
+                                            </div>
 
 
 
-                                                <div class="col-md-3" style="margin-top:3.2rem;" align="center">
+
+                                                <div class="col-md-2" style="margin-top:3.2rem;" align="center">
 
                                                     <div class="input-group col-md-12" style=" margin-bottom:15px;">
 
@@ -88,33 +106,36 @@
                                             </div>
                                         </div>
                                     </form>
+                                    <div class="col-md-2">
+                                        <form method="POST" action="{{ url('printtelecallerorder') }}" class="form-horizontal"
+                                            name="printform" id="printform" enctype="multipart/form-data" target="_blank">
+                                            @csrf
+    
+                                            <div class="input-group col-md-12" style=" margin-bottom:15px;margin-top:2.4rem;">
+                                                <input type="hidden" name="printfromdate" id="printfromdate"
+                                                    value="{{ $fromdatepage ?? '' }}">
+                                                <input type="hidden" name="teleorderweight" id="teleorderweight"
+                                                    value="{{ number_format((float) $teleorderweight, 2, '.', '') ?? '' }}">
+                                                <input type="hidden" name="printtodate" id="printtodate"
+                                                    value="{{ $todatepage ?? '' }}">
+                                                    <input type="hidden" name="telecallerid" id="teleid"
+                                                    value="{{ $telecallerid }}"> 
+                                                    <input type="hidden" name="shopname" id="teleid"
+                                                    value="{{ $shopname }}">
+                                                <input type="hidden" name="teleordercount" id="teleordercount"
+                                                    value="{{ $teleordercount }}">
+                                                    <input name="totalAmount" type="hidden" value="{{$totalAmount ?? 0}}">
+    
+    
+                                                <button type="submit"
+                                                    class="btn btn-warning col-md-6 printtelecallerorder"><span
+                                                        class="fa fa-print"></span> Print</button>
+                                            </div>
+    
+                                        </form>
+                                    </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <form method="POST" action="{{ url('printtelecallerorder') }}" class="form-horizontal"
-                                        name="printform" id="printform" enctype="multipart/form-data" target="_blank">
-                                        @csrf
-
-                                        <div class="input-group col-md-12" style=" margin-bottom:15px;margin-top:2.4rem;">
-                                            <input type="hidden" name="printfromdate" id="printfromdate"
-                                                value="{{ $fromdatepage ?? '' }}">
-                                            <input type="hidden" name="teleorderweight" id="teleorderweight"
-                                                value="{{ number_format((float) $teleorderweight, 2, '.', '') ?? '' }}">
-                                            <input type="hidden" name="printtodate" id="printtodate"
-                                                value="{{ $todatepage ?? '' }}">
-                                            <input type="hidden" name="telecallerid" id="teleid"
-                                                value="{{ $telecallerid }}">
-                                            <input type="hidden" name="teleordercount" id="teleordercount"
-                                                value="{{ $teleordercount }}">
-												<input name="totalAmount" type="hidden" value="{{$totalAmount ?? 0}}">
-
-
-                                            <button type="submit"
-                                                class="btn btn-warning col-md-6 printtelecallerorder"><span
-                                                    class="fa fa-print"></span> Print</button>
-                                        </div>
-
-                                    </form>
-                                </div>
+                               
                             </div>
 
 
@@ -148,7 +169,8 @@
                             <h3 style="margin-top: 10px;text-align: center">From :{{ $fromdatepage ?? ('' ?? '') }} &nbsp;
                                 To :{{ $todatepage ?? ('' ?? '') }} </h3>
                             <h3 style="margin-top: 10px;text-align: center;color: black;">Telecaller
-                                :{{ ucfirst($telecallername) ?? '' }} &nbsp; Total Order :{{ $teleordercount }} &nbsp;
+                                :{{ ucfirst($telecallername) ?? '' }} &nbsp;Shop
+                                :{{ ucfirst($shopnametitle) ?? '' }} &nbsp; Total Order :{{ $teleordercount }} &nbsp;
                                 Total Weight :{{ number_format((float) $teleorderweight, 2, '.', '') }} KG &nbsp;Total Amount :{{isset($totalAmount) ? number_format(round($totalAmount)) : 0}} </h3>
                         </div>
 
@@ -159,17 +181,16 @@
                                     <th width="10%">id</th>
                                     <th width="10%">Order No</th>
                                     <th width="10%">Order Date</th>
+                                    <th width="10%">Shop Name</th>
                                     <th width="10%">Customer Name</th>
-                                    <th width="35%">Item Name</th>
-                                    <th width="15%">Weight </th>
+                                    <th width="30%">Item Name</th>
+                                    <th width="10%">Weight </th>
                                     <th width="10%">Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php 
-								if($teleorder!=null) 
-								{
-									?>
+								@if($teleorder!=null) 
+								
 
                                 @foreach ($teleorder as $a)
                                     <tr>
@@ -177,6 +198,7 @@
                                         <td>{{ $a->orderno }}</td>
                                         <td> {{ date('m-d-Y', strtotime($a->created_at)) }}
                                         </td>
+                                        <td>{{$a->shopname}}</td>
 
                                         <td>
                                             {{ $a->custname }}
@@ -196,9 +218,7 @@
                                     </tr>
                                 @endforeach
 
-                                <?php 
-								}
-								?>
+                                @endif
 
 
                             </tbody>

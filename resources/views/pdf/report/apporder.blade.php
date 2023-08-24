@@ -50,7 +50,8 @@
 <body id="contentss">
     <table class="headertable">
         <tr>
-            <td style="float: left;width: 350px;"><img src="{{asset('public/logo/avatar.jpg')}}" style="height: 120px;width: 120px;"></td>
+            <td style="float: left;width: 350px;"><img src="{{ asset('public/logo/avatar.jpg') }}"
+                    style="height: 120px;width: 120px;"></td>
             <td>
                 <p>Address :Dastur Nagar</p>
                 <p>Mobile :9887788554</p>
@@ -59,10 +60,11 @@
         </tr>
     </table>
 
-    <p><strong>From : {{date('d-m-Y',strtotime($fromdate)) }} &nbsp; To : {{date('d-m-Y',strtotime($todate)) }}</strong></p>
-    <p><strong>Total Order : {{$appordercount}}</strong></p>
-    <p><strong>Total Weight : {{number_format((float)$apporderweight, 2, '.', '') ?? ''}} KG</strong></p>
-    <p><strong>Total Amount : {{number_format((float)$totalAmount, 2, '.', '') ?? ''}} </strong></p>
+    <p><strong>From : {{ date('d-m-Y', strtotime($fromdate)) }} &nbsp; To :
+            {{ date('d-m-Y', strtotime($todate)) }}</strong></p>
+    <p><strong>Total Order : {{ $appordercount }}</strong></p>
+    <p><strong>Total Weight : {{ number_format((float) $apporderweight, 2, '.', '') ?? '' }} KG</strong></p>
+    <p><strong>Total Amount : {{ number_format((float) $totalAmount, 2, '.', '') ?? '' }} </strong></p>
 
 
     <table class="ordertable" style="margin-top: 20px;">
@@ -75,42 +77,40 @@
             <th style="width:10px;text-align: left;height: 40px;">Amount</th>
         </tr>
 
-        @foreach($apporder as $t)
-        <tr style="height: 40px; border-bottom: 1px solid black;text-align: left">
-            <td style="width:50px;">{{$t->orderno}}</td>
-            <td style="width:50px;"> {{date('d-m-Y',strtotime($t->created_at))}}
-            </td>
-            <td style="width:70px;">
+        @foreach ($apporder as $t)
+            <tr style="height: 40px; border-bottom: 1px solid black;text-align: left">
+                <td style="width:50px;">{{ $t->orderno }}</td>
+                <td style="width:50px;"> {{ date('d-m-Y', strtotime($t->created_at)) }}
+                </td>
+                <td style="width:70px;">
 
-                {{$t->custname}}
-            </td>
-            <td style="width:80px;">
+                    {{ $t->custname }}
+                </td>
+                <td style="width:80px;">
 
-                 @if(isset($t->teleorderlists))
+                    @if (isset($t->teleorderlists))
+                        @foreach ($t->teleorderlists as $teleorderlist1)
+                            {{ $teleorderlist1->items }}
+                        @endforeach
+                    @endif
+                </td>
+                <td style="width:40px;padding-left:10px;">
+                    @if (isset($t->teleorderlists))
+                        @foreach ($t->teleorderlists as $teleorderlist2)
+                            {{ $teleorderlist2->weights }} KG
+                        @endforeach
+                    @endif
 
-                                        @foreach ($t->teleorderlists as $teleorderlist1)
-                                        {{ $teleorderlist1->items }}
-                                    @endforeach
-                                    @endif
-            </td>
-            <td style="width:40px;padding-left:10px;">
-                @if(isset($t->teleorderlists))
-                                        @foreach ($t->teleorderlists as $teleorderlist2)
-                                        {{ $teleorderlist2->weights }} KG
-                                    @endforeach
-                                    @endif
+                </td>
 
-            </td>
-
-            <td style="width:10px;padding-left:10px;"> {{$t->amount}}</td>
-        </tr>
-
+                <td style="width:10px;padding-left:10px;"> {{ $t->amount }}</td>
+            </tr>
         @endforeach
 
 
 
     </table>
-    <script type="text/javascript" src="{{asset('public/js/plugins/jquery/jquery.min.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('public/js/plugins/jquery/jquery.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {

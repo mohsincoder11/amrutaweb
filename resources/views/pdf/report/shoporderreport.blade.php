@@ -64,7 +64,7 @@
     <p><strong>Total Order : {{ $totalshoporder }}</strong></p>
     <p><strong>Total Weight : {{ $totalweight }}</strong></p>
     <p><strong>Total Amount : {{ number_format($totalAmount) }}</strong></p>
-	
+
 
     <table class="ordertable" style="margin-top: 20px;">
         <tr style="height: 40px;text-align: left">
@@ -81,20 +81,18 @@
                 <td style="width:50px;padding-left:10px;height: 40px;"> {{ date('d-m-Y', strtotime($t->created_at)) }}
                 </td>
                 <td style="width:80px;padding-left:10px;">
-                    @if(isset($t->shopOrderLists))
-
-                    @foreach ($t->shopOrderLists as $teleorderlist1)
-                    {{ $teleorderlist1->items }}
-                @endforeach
-                @endif
+                    @if (isset($t->shopOrderLists))
+                        @foreach ($t->shopOrderLists as $teleorderlist1)
+                            {{ $teleorderlist1->items }}
+                        @endforeach
+                    @endif
                 </td>
                 <td style="width:80px;padding-left:10px;">
-                    @if(isset($t->shopOrderLists))
-
-                    @foreach ($t->shopOrderLists as $teleorderlist1)
-                    {{ $teleorderlist1->weights }} KG
-                @endforeach
-                @endif 
+                    @if (isset($t->shopOrderLists))
+                        @foreach ($t->shopOrderLists as $teleorderlist1)
+                            {{ $teleorderlist1->weights }} KG
+                        @endforeach
+                    @endif
 
                 </td>
 

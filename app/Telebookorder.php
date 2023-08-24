@@ -24,4 +24,13 @@ class Telebookorder extends Model
         
         return $this->hasMany(Teleorderlist::class, 'orderid', 'orderid');
     }
+
+    public function getShopNameTitleAttributes(){
+        $shopname=Shop::find($this->shopname);
+        if($shopname){
+            return $shopname->shopname;
+        }else{
+            return '';
+        }
+    }
 }

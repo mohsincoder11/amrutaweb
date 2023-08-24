@@ -1,116 +1,123 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>Item Report</title>
-	<style type="text/css">
-		body
-		{
-			font-size: 12px;
-		}
-		.ordertable {
-			border-collapse: collapse;
-			width: 1024px;
-			text-align: center;
-			background-color: #c3f7d8;
-		}
-		h2{
-			text-align: center;
-		}
+    <title>Item Report</title>
+    <style type="text/css">
+        body {
+            font-size: 12px;
+        }
+
+        .ordertable {
+            border-collapse: collapse;
+            width: 1024px;
+            text-align: center;
+            background-color: #c3f7d8;
+        }
+
+        h2 {
+            text-align: center;
+        }
 
 
-		.ordertable td
-		{
-			background-color: #fff;
-			border-bottom: 1px solid #c3c9c6;
-			padding-top: 2px;
-			padding-bottom: 10px;
-		}
-		p{
-			color: #454443;
-		}
-		.headertable
-		{
-			border-collapse: collapse;
-			width: 1024px;
-		}
-		.headertable td
-		{
-			background-color: #fff;
-			border: 1px solid #c3c9c6;
-			padding-left: 10px;
-		}
-	</style>
+        .ordertable td {
+            background-color: #fff;
+            border-bottom: 1px solid #c3c9c6;
+            padding-top: 2px;
+            padding-bottom: 10px;
+        }
+
+        p {
+            color: #454443;
+        }
+
+        .headertable {
+            border-collapse: collapse;
+            width: 1024px;
+        }
+
+        .headertable td {
+            background-color: #fff;
+            border: 1px solid #c3c9c6;
+            padding-left: 10px;
+        }
+    </style>
 
 
 </head>
+
 <body id="contentss">
-	<table class="headertable">
-		<tr>
-			<td style="float: left;width: 350px;"><img src="{{asset('public/logo/avatar.jpg')}}" style="height: 120px;width: 120px;"></td>
-			<td>
-			<p>Address :Dastur Nagar</p>
-				<p>Mobile :9887788554</p><p>Address :Dastur Nagar</p>
-				</td>
-		</tr>
-	</table>
-	<h3 style="text-align: center">Item Report</h3>
-	<p><strong>From : {{$fromdate}} &nbsp; To : {{$todate}}</strong></p>
-	<p><strong>Item : {{$itemname}}</strong></p>
-	<p><strong>Total Order : {{$itemcount}}</strong></p>
-	<p><strong>Total Kg : {{number_format($totalkg,3)}}</strong></p>
-	<p><strong>Total Amount : {{number_format($totalrate,2)}}</strong></p>
+    <table class="headertable">
+        <tr>
+            <td style="float: left;width: 350px;"><img src="{{ asset('public/logo/avatar.jpg') }}"
+                    style="height: 120px;width: 120px;"></td>
+            <td>
+                <p>Address :Dastur Nagar</p>
+                <p>Mobile :9887788554</p>
+                <p>Address :Dastur Nagar</p>
+            </td>
+        </tr>
+    </table>
+    <h3 style="text-align: center">Item Report</h3>
+    <p><strong>From : {{ $fromdate }} &nbsp; To : {{ $todate }}</strong></p>
+    <p><strong>Item : {{ $itemname }}</strong></p>
+    <p><strong>Total Order : {{ $itemcount }}</strong></p>
+    <p><strong>Total Kg : {{ number_format($totalkg, 3) }}</strong></p>
+    <p><strong>Total Amount : {{ number_format($totalrate, 2) }}</strong></p>
 
-	<table class="ordertable" style="margin-top: 20px;">
-		<tr style="height: 40px;text-align: left">
-			<th style="width:50px;text-align: left; padding-left: 10px;height: 40px;">Order Date</th>
-			<th style="width:50px;text-align: left; padding-left: 10px;height: 40px;">Item Name</th>
-			<th style="width:60px;text-align: left;padding-left:10px;height: 40px;">Weight</th>
-			<th style="width:60px;text-align: left;padding-left:10px;height: 40px;">Rate</th>
-		</tr>
-		
-		@foreach($shopitem as $t)
-		<tr style="height: 40px; border-bottom: 1px solid black;text-align: left" >
-			<td style="width:50px;padding-left:10px;height: 40px;">{{date('d-m-y',strtotime($t['created_at']))}}</td>
-			<td style="width:50px;padding-left:10px;height: 40px;">{{$t['itemname']}}</td>
-			<td style="width:80px;padding-left:10px;">
-				{{$t['weight']}} Kg
-			</td><td style="width:80px;padding-left:10px;">
-				{{$t['rate']}}
-			</td>
+    <table class="ordertable" style="margin-top: 20px;">
+        <tr style="height: 40px;text-align: left">
+            <th style="width:50px;text-align: left; padding-left: 10px;height: 40px;">Order Date</th>
+            <th style="width:50px;text-align: left; padding-left: 10px;height: 40px;">Item Name</th>
+            <th style="width:60px;text-align: left;padding-left:10px;height: 40px;">Weight</th>
+            <th style="width:60px;text-align: left;padding-left:10px;height: 40px;">Rate</th>
+        </tr>
 
-		</tr>
-		
-		@endforeach
+        @foreach ($shopitem as $t)
+            <tr style="height: 40px; border-bottom: 1px solid black;text-align: left">
+                <td style="width:50px;padding-left:10px;height: 40px;">{{ date('d-m-y', strtotime($t['created_at'])) }}
+                </td>
+                <td style="width:50px;padding-left:10px;height: 40px;">{{ $t['itemname'] }}</td>
+                <td style="width:80px;padding-left:10px;">
+                    {{ $t['weight'] }} Kg
+                </td>
+                <td style="width:80px;padding-left:10px;">
+                    {{ $t['rate'] }}
+                </td>
 
-		
-		@foreach($teleitem as $s)
-		<tr style="height: 40px; border-bottom: 1px solid black;text-align: left" >
-			<td style="width:50px;padding-left:10px;height: 40px;">{{date('d-m-y',strtotime($s['created_at']))}}</td>
-			<td style="width:50px;padding-left:10px;height: 40px;">{{$s['itemname']}}</td>
-			<td style="width:80px;padding-left:10px;">
-				{{$s['weight']}}
-			</td>
-<td style="width:80px;padding-left:10px;">
-				{{$s['rate']}}
-			</td>
+            </tr>
+        @endforeach
 
-		</tr>
-		@endforeach
-	</table>
-<script type="text/javascript" src="{{asset('public/js/plugins/jquery/jquery.min.js')}}"></script>
 
-<script>
+        @foreach ($teleitem as $s)
+            <tr style="height: 40px; border-bottom: 1px solid black;text-align: left">
+                <td style="width:50px;padding-left:10px;height: 40px;">{{ date('d-m-y', strtotime($s['created_at'])) }}
+                </td>
+                <td style="width:50px;padding-left:10px;height: 40px;">{{ $s['itemname'] }}</td>
+                <td style="width:80px;padding-left:10px;">
+                    {{ $s['weight'] }}
+                </td>
+                <td style="width:80px;padding-left:10px;">
+                    {{ $s['rate'] }}
+                </td>
 
-		$(document).ready( function () {
-			 var printContents = document.getElementById('contentss').innerHTML;
-     var originalContents = document.body.innerHTML;
+            </tr>
+        @endforeach
+    </table>
+    <script type="text/javascript" src="{{ asset('public/js/plugins/jquery/jquery.min.js') }}"></script>
 
-     document.body.innerHTML = printContents;
+    <script>
+        $(document).ready(function() {
+            var printContents = document.getElementById('contentss').innerHTML;
+            var originalContents = document.body.innerHTML;
 
-     window.print();
+            document.body.innerHTML = printContents;
 
-     document.body.innerHTML = originalContents;
- });
-</script>
+            window.print();
+
+            document.body.innerHTML = originalContents;
+        });
+    </script>
 </body>
+
 </html>
