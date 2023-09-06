@@ -9,7 +9,7 @@ class Telebookorder extends Model
     //
     protected $fillable = [
         'masterid', 'orderdate', 'orderno', 'orderid', 'user_id', 'custname', 'mobile', 'altmobile', 'details',
-        'address', 'lat_long', 'area_id', 'shopname', 'mop', 'timetaken', 'timestatus', 'amount', 'collectedcash', 'paidstatus',
+        'address', 'lat_long', 'area_id', 'shopname', 'mop', 'timetaken', 'timestatus', 'amount','discount', 'collectedcash', 'paidstatus',
         'status', 'assignto', 'deliveryboyid', 'orderfrom', 'time_slot', 'delivery_charge'
     ];
     protected $dates = ['expired_at'];

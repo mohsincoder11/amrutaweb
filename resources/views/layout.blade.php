@@ -589,6 +589,9 @@
       border: 1px solid #ffc107 !important;
 
     }
+    .d-none{
+      display: none;
+    }
   </style>
   @yield('css')
  

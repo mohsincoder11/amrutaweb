@@ -88,7 +88,7 @@ class AdminController extends Controller
 		$user = Session::get('userdata');
 		if ($user['role'] == 1) {
 			$this->data['user'] = Usermanage::where('role', '>', '1')->where('role', '<', '4')->get();
-			return view('Admin/usermanage', $this->data);
+			return view('Admin.usermanage', $this->data);
 		} else {
 			return redirect()->route('generateorder');
 		}
@@ -126,18 +126,20 @@ class AdminController extends Controller
 	{
 		$this->data['user'] = Usermanage::where('role', '>', '1')->where('role', '<', '4')->get();
 		$this->data['singleuser'] = Usermanage::where('id', $request->id)->first();
-		return view('Admin/editusermanage', $this->data);
+		return view('Admin.editusermanage', $this->data);
 	}
 	public function updateusermanage(Request $request)
 	{
 		// echo json_encode($request);
 		// exit();
-
-		$x =  Usermanage::where('id', $request->id)->update([
+		$user =  Usermanage::find($request->id);
+		if(isset($request->password) && $request->password!=null){
+			$user->password=Hash::make($request->password);
+		}
+		$user->update([
 			'username' => $request['username'],
 			'email' => $request['email'],
 			'uniqueprefix' => $request['uniqueprefix'],
-
 			'shop' => $request['shop'],
 			'telecaller' => $request['telecaller'],
 			'report' => $request['report'],

@@ -99,6 +99,12 @@
 		@endforeach
 	</table>
 	<table style="width: 300px;margin-top: 10px;">
+		@if(isset($shoporder->discount) && $shoporder->discount>0)
+		<tr style="border-bottom: 1px solid #cfcbc8;">
+			<td style="width:120px;margin-left:-30px;">Discount: - &#8377; {{$shoporder->discount}} </td>
+			
+		</tr>
+		@endif
 		<tr style="border-bottom: 1px solid #cfcbc8;">
 			<td style="width:120px;margin-left:-30px;">Delivery Charge: &#8377; {{$shoporder->delivery_charge}} </td>
 			

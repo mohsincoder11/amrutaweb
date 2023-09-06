@@ -172,8 +172,7 @@ if(isset($request->date) && $request->date!=null){
 	public function insertteleorder(Request $request)
 	{
 		$data = session::get('userdata');
-		// echo json_encode($orderlistdata);
-		// exit();
+		
 		if ($request->custpresent != 1) {
 			$x =  Customer::create([
 				'custtype' => 'Person',
@@ -207,6 +206,7 @@ if(isset($request->date) && $request->date!=null){
 			'orderfrom' => 'telecaller',			
 			'assignto' => 'null',
 			'amount' => $request['amount'],
+			'discount' => $request['discount'],
 			'delivery_charge'=>$request['delivery_charge'],
 
 		]);

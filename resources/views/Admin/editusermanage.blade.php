@@ -28,8 +28,8 @@
                   <input type="hidden" value="{{$singleuser->id}}" name="id">
                   <div class="col-md-12">
                     <div class="form-group" style="margin-top:-10px;">
-
-                      <div class="col-md-1"></div>
+<div class="row">
+                      <div class="col-md-2"></div>
                       <div class="col-md-2" style="margin-top:15px;">
                         <label>Username<font color="#FF0000">*</font></label>
                         <input type="text" placeholder="Enter Username" class="form-control" required name="username" value="{{$singleuser->username}}" />
@@ -48,8 +48,14 @@
                         <label>Email<font color="#FF0000">*</font></label>
                         <input type="email" placeholder="Enter email" class="form-control" required name="email" value="{{$singleuser->email}}" />
                       </div>
-
-                      <div class="col-md-4" style="margin-top:40px;">
+                      <div class="col-md-2" style="margin-top:15px;">
+                        <label>Password<font color="#FF0000">*</font></label>
+                        <input type="password" placeholder="Enter Password" class="form-control"  name="password" value="" />
+                      </div>
+                    </div>
+                    <div class="row">
+                      
+                      <div class="col-md-4 col-md-offset-4" style="margin-top:40px;">
                         <table>
                           <tr>
                             <td style="padding-right:5px;">
@@ -71,7 +77,7 @@
                           </tr>
                         </table>
                       </div>
-
+                    </div>
                     </div>
                   </div>
                 </div>

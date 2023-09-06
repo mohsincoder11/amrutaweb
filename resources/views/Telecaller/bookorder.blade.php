@@ -217,12 +217,18 @@
                             <option value="ONLINE">Online</option>
                           </select>
                         </div>
-
+                        <input type="hidden" id="allitemamount">
+                        <input type="hidden" id="discount_amount" value="0">
+                        <div class="col-md-4 discount_div d-none" style="margin-top:15px;">
+                          <label>Discount % <font color="#FF0000">*</font></label>
+                          <input type="number" step="0.5" placeholder="Discount in percentage" class="form-control" id="discount" value="0" name="discount" style="font-size: 18px;color:#555" autocomplete="off" />
+                        </div>
                         <div class="col-md-4" style="margin-top:15px;">
                           <label>Delivery Charges<font color="#FF0000">*</font></label>
                           <input type="number" placeholder="Delivery Charges" class="form-control" id="delivery_charge" value="10" name="delivery_charge" style="font-size: 18px;color:#555" readonly="" autocomplete="off" />
                         </div>
 
+                       
                         <div class="col-md-4" style="margin-top:15px;">
                           <label>Total Amount<font color="#FF0000">*</font></label>
                           <input type="number" placeholder="Total Amount" class="form-control" id="totalamount" value="0" name="totalamount" style="font-size: 18px;color:#555" readonly="" autocomplete="off" />
@@ -333,6 +339,7 @@
         url: 'getamount/' + id,
         success: function(data) {
           if (customertype == 'hotelcheckbox') {
+            $(".discount_div").removeClass('d-none');
             $("#amount").val(data.hotelrate);
             $("#actualamount").val(data.hotelrate);
             $("#retailcheckbox").val('hotel');
@@ -343,6 +350,9 @@
 
           }
           if (customertype == 'retailcheckbox') {
+            $("#discount").val(0);
+            $(".discount_div").addClass('d-none');
+
             $("#amount").val(data.retailrate);
             $("#actualamount").val(data.retailrate);
             $('.addrow').empty();
@@ -558,6 +568,17 @@
       }
     });
 
+    $("#discount").keyup(function() {
+      var value = $(this).val().replace(/[^0-9.]/g, '');
+        var floatValue = Math.min(parseFloat(value) || 0, 100);
+        $(this).val(value === '.' || value.endsWith('.') ? '' : floatValue);
+        let totalamount=$("#allitemamount").val();
+        let discount=totalamount/100* $(this).val();
+        $("#discount_amount").val(discount);
+        $("#totalamount").val(Math.round(totalamount-parseInt(discount) + parseInt($("#delivery_charge").val())));
+    })
+
+
     $(".addorderrow").click(function() {
       var itemname = $("#itemname2").val();
       var weight = $("#weight").val();
@@ -586,7 +607,10 @@
             totalamountafteradd = totalamountafteradd + parseInt(b.rate);
             $("#totalamount").val(totalamountafteradd);
           });
+          
+          $("#allitemamount").val(totalamountafteradd);
           $("#totalamount").val(totalamountafteradd + parseInt($("#delivery_charge").val()));
+          $("#discount").trigger('keyup');
           getitemdetail();
         }
       });
@@ -615,7 +639,11 @@
             $("#orderid").val(b.orderid);
             totalamountafterdelete = parseInt(totalamountafterdelete) + parseInt(b.rate);
           });
+          $("#allitemamount").val(totalamountafterdelete);
+
           $("#totalamount").val(totalamountafterdelete + parseInt($("#delivery_charge").val()));
+          $("#discount").trigger('keyup');
+
           getitemdetail();
         }
       });
@@ -634,7 +662,7 @@
         var address = ($("#address").val()).length;
         var mobile = ($("#mobile").val()).length;
         if (fullname > 0) {
-          if (mobile > 9 && mobile < 11) {
+          if (mobile ==10) {
             if (address > 0) {
               $(".bookorderbutton").prop("disabled", true);
               $.ajax({
@@ -654,6 +682,7 @@
                   shopname: $("#shopname").val(),
                   orderid: $("#orderid").val(),
                   amount: $("#totalamount").val(),
+                  discount: $("#discount_amount").val(),
                   delivery_charge: $("#delivery_charge").val(),
                 },
                 dataType: 'json',

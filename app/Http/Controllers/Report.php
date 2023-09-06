@@ -60,7 +60,7 @@ class Report extends Controller
 
 	
 		$this->data['apporder'] = Telebookorder::with(['teleorderlists' => function ($query) {
-			$query->select('orderid', 'itemname', 'weight')
+			$query->where('orderfrom','app')->select('orderid', 'itemname', 'weight')
 				->selectRaw("GROUP_CONCAT(itemname SEPARATOR ', ') as items")
 				->selectRaw("GROUP_CONCAT(weight SEPARATOR ' KG, ') as weights")
 				->groupBy('orderid');
@@ -151,7 +151,7 @@ class Report extends Controller
 
 	
 		$this->data['apporder'] = Telebookorder::with(['teleorderlists' => function ($query) {
-			$query->select('orderid', 'itemname', 'weight')
+			$query->where('orderfrom','app')->select('orderid', 'itemname', 'weight')
 				->selectRaw("GROUP_CONCAT(itemname SEPARATOR ', ') as items")
 				->selectRaw("GROUP_CONCAT(weight SEPARATOR ' KG, ') as weights")
 				->groupBy('orderid');
@@ -257,8 +257,8 @@ class Report extends Controller
 			$this->data['telecallername'] = "All";
 			$this->data['teleorderweight'] = DB::table('teleorderlists')->join('telebookorders', 'telebookorders.orderid', '=', 'teleorderlists.orderid')
 			->where('teleorderlists.orderfrom', 'telecaller')
-			->whereDate('teleorderlists.created_at', '>=', date('Y-m-d', strtotime($request->fromdate)))
-			->whereDate('teleorderlists.created_at', '<=', date('Y-m-d', strtotime($request->todate)))
+			->whereDate('telebookorders.created_at', '>=', date('Y-m-d', strtotime($request->fromdate)))
+			->whereDate('telebookorders.created_at', '<=', date('Y-m-d', strtotime($request->todate)))
 			->when($shopname && $shopname!='all',function($q) use($shopname){
 				$q->where('telebookorders.shopname',$shopname);
 			})
@@ -291,8 +291,8 @@ class Report extends Controller
 
 			$this->data['teleorderweight'] = DB::table('teleorderlists')
 			->join('telebookorders', 'telebookorders.orderid', '=', 'teleorderlists.orderid')
-			->where('teleorderlists.masterid', $request->telecallerid)->where('teleorderlists.orderfrom', 'telecaller')->whereDate('teleorderlists.created_at', '>=', date('Y-m-d', strtotime($request->fromdate)))
-			->whereDate('teleorderlists.created_at', '<=', date('Y-m-d', strtotime($request->todate)))
+			->where('teleorderlists.masterid', $request->telecallerid)->where('teleorderlists.orderfrom', 'telecaller')->whereDate('telebookorders.created_at', '>=', date('Y-m-d', strtotime($request->fromdate)))
+			->whereDate('telebookorders.created_at', '<=', date('Y-m-d', strtotime($request->todate)))
 			->when($shopname && $shopname!='all',function($q) use($shopname){
 				$q->where('telebookorders.shopname',$shopname);
 			})
@@ -402,7 +402,7 @@ class Report extends Controller
 		// $this->data['apporder'] = DB::select("select telebookorders.orderno,telebookorders.id,telebookorders.custname,telebookorders.created_at,telebookorders.amount,GROUP_CONCAT(teleorderlists.itemname SEPARATOR',  ') as items,GROUP_CONCAT(teleorderlists.weight SEPARATOR' Kg,  ') as weights from telebookorders  left join teleorderlists on teleorderlists.orderid=telebookorders.id where telebookorders.created_at >= '$fromdate' AND telebookorders.created_at <= '$newtodate' AND telebookorders.orderfrom='app' group by telebookorders.id order by telebookorders.id desc");
 
 		$this->data['apporder'] = Telebookorder::with(['teleorderlists' => function ($query) {
-			$query->select('orderid', 'itemname', 'weight')
+			$query->where('orderfrom', 'app')->select('orderid', 'itemname', 'weight')
 				->selectRaw("GROUP_CONCAT(itemname SEPARATOR ', ') as items")
 				->selectRaw("GROUP_CONCAT(weight SEPARATOR ' KG, ') as weights")
 				->groupBy('orderid');
@@ -416,7 +416,7 @@ class Report extends Controller
 			->get();
 
 		$this->data['totalAmount'] = Telebookorder::with(['teleorderlists' => function ($query) {
-			$query->select('orderid', 'itemname', 'weight')
+			$query->where('orderfrom', 'app')->select('orderid', 'itemname', 'weight')
 				->groupBy('orderid');
 		}])
 			->where('created_at', '>=', $fromdate)
@@ -430,7 +430,14 @@ class Report extends Controller
 		// exit();
 
 
-		$this->data['apporderweight'] = DB::table('teleorderlists')->leftjoin('telebookorders', 'telebookorders.id', '=', 'teleorderlists.orderid')->where('teleorderlists.orderfrom', 'app')->whereDate('teleorderlists.created_at', '>=', $fromdate)->whereDate('teleorderlists.created_at', '<=', $newtodate)->where('teleorderlists.orderid', '!=', '0')->sum('teleorderlists.weight');
+		$this->data['apporderweight'] = DB::table('teleorderlists')
+		->leftjoin('telebookorders', 'telebookorders.id', '=', 'teleorderlists.orderid')
+		->where('teleorderlists.orderfrom', 'app')
+		->whereDate('telebookorders.created_at', '>=', $fromdate)
+		->whereDate('telebookorders.created_at', '<=', $newtodate)
+		->where('teleorderlists.orderid', '!=', '0')
+		->sum('weight');
+		
 		$this->data['appordercount'] = count($this->data['apporder']);
 		return view('reports.apporderreport', $this->data);
 	}
@@ -445,8 +452,8 @@ class Report extends Controller
 			$this->data['fromdate'] = $fromdate;
 			$this->data['todate'] = $newtodate;
 			$this->data['apporder'] = Telebookorder::with(['teleorderlists' => function ($query) {
-				$query->select('orderid', 'itemname', 'weight')
-					->selectRaw("GROUP_CONCAT(itemname SEPARATOR ', ') as items")
+				$query->where('orderfrom','app')->select('orderid', 'itemname', 'weight')
+				->selectRaw("GROUP_CONCAT(itemname SEPARATOR ', ') as items")
 					->selectRaw("GROUP_CONCAT(weight SEPARATOR ' KG, ') as weights")
 					->groupBy('orderid');
 			}])

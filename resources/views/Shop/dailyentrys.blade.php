@@ -192,22 +192,23 @@
                             <table class="table" id="dailyentrytable">
                                 <thead>
                                     <tr>
-                                        <th>id</th>
-                                        <th width="5%">Date</th>
-                                        <th width="7%">Shop Name</th>
-                                        <th width="6%">Time</th>
+                                        <th width="6%">id</th>
+                                        <th width="7%">Date</th>
+                                        <th width="10%">Shop Name</th>
+                                        <th width="7%">Time</th>
                                         <th width="7%">Opening Birds</th>
                                         <th width="7%">Sale Birds</th>
                                         <th width="7%">Sale Wt.(Meat)</th>
-                                        <th width="5%">Bill</th>
-                                        <th width="5%">Mortality</th>
-                                        <th width="5%">Wt.</th>
+                                        <th width="6%">Bill</th>
+                                        <th width="6%">Mortality</th>
+                                        <th width="6%">Wt.</th>
+                                        <th width="6%">Expenses</th>
                                         <th width="7%">Closing Birds</th>
                                         <th width="7%">Total sale Amt.</th>
-                                        <th width="5%">Dis Amount</th>
-                                        <th width="5%">Meat Percentage</th>
-                                        <th width="5%">Closing Balance</th>
-                                        <th width="5%">Action</th>
+                                        <th width="6%">Dis Amount</th>
+                                        <th width="7%">Meat Percentage</th>
+                                        <th width="7%">Closing Balance</th>
+                                        <th width="7%">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="dailyentryrow">
@@ -367,7 +368,7 @@
                         let salegwt=parseFloat(b.salegwt).toFixed(3);
                         let wt=parseFloat(b.wt).toFixed(3);
                         $("#dailyentryrow").append(
-                            '<tr><td>' + b.id + '</td><td>' + b.date + '</td><td>' + shopname + '</td><td>' + b.time + '</td><td>' + b.openingbirds + '</td><td>' + b.salegbird + '</td><td>' +salegwt + '</td><td>100</td><td>' + b.mortality + '</td><td>' + wt + '</td><td>' + b.closingbird + '</td><td>' + b.tsaleamt + '</td><td>' + b.disamt + '</td><td>' + b.meat_percent + '</td><td>' + b.closing_amount + '</td><td><a  class="modal-effect btn btn-danger btn-xs rounded-circle delete" data-toggle="modal" data-effect="effect-sign" id=' + b.id + ' data-toggle="tooltip-danger" title="Delete Record" data-placement="top"><i class="fa fa-trash"></i></a></td></tr>'
+                            '<tr><td>' + b.id + '</td><td>' + b.date + '</td><td>' + shopname + '</td><td>' + b.time + '</td><td>' + b.openingbirds + '</td><td>' + b.salegbird + '</td><td>' +salegwt + '</td><td>100</td><td>' + b.mortality + '</td><td>' + wt + '</td><td>' + b.expenses + '</td><<td>' + b.closingbird + '</td><td>' + b.tsaleamt + '</td><td>' + b.disamt + '</td><td>' + b.meat_percent + '</td><td>' + b.closing_amount + '</td><td><a  class="modal-effect btn btn-danger btn-xs rounded-circle delete" data-toggle="modal" data-effect="effect-sign" id=' + b.id + ' data-toggle="tooltip-danger" title="Delete Record" data-placement="top"><i class="fa fa-trash"></i></a></td></tr>'
                         );
                         //alert(data[j].fullname);
                     });
