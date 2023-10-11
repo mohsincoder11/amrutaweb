@@ -27,13 +27,14 @@
                     @php
                         
                         $firstday = get_five_days_record(0,1);
+                      
                         
                     @endphp
                     @foreach ($firstday as $d)
                         <tr>
-                            <th scope="row">{{ $d->shop_name_only }}</th>
-                            <td>{{ $d->shop_first_weight }} kg</td>
-                            <td>{{ $d->shop_first_amount }} Rs</td>
+                            <th scope="row">{{ $d->shopname }}</th>
+                            <td>{{ $d->totalweight }} kg</td>
+                            <td>{{ get_Shop_amount($d->masterid,0,1) }} Rs</td>
                         </tr>
                     @endforeach
 
@@ -73,13 +74,13 @@
                            $second = get_five_days_record(-1,0);
                            
                        @endphp
-                        @foreach ($second as $d)
-                        <tr>
-                            <th scope="row">{{ $d->shop_name_only }}</th>
-                            <td>{{ $d->shop_second_weight }} kg</td>
-                            <td>{{ $d->shop_second_amount }} Rs</td>
-                        </tr>
-                    @endforeach
+                          @foreach ($second as $d)
+                          <tr>
+                              <th scope="row">{{ $d->shopname }}</th>
+                              <td>{{ $d->totalweight }} kg</td>
+                              <td>{{ get_Shop_amount($d->masterid,-1,0) }} Rs</td>
+                          </tr>
+                      @endforeach
 
                    </tbody>
             </table>

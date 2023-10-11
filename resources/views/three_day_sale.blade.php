@@ -26,13 +26,13 @@
                         $firstday = get_five_days_record(-2,-1);
                         
                     @endphp
-                     @foreach ($firstday as $d)
-                     <tr>
-                         <th scope="row">{{ $d->shop_name_only }}</th>
-                         <td>{{ $d->shop_third_weight }} kg</td>
-                         <td>{{ $d->shop_third_amount }} Rs</td>
-                     </tr>
-                 @endforeach
+                    @foreach ($firstday as $d)
+                    <tr>
+                        <th scope="row">{{ $d->shopname }}</th>
+                        <td>{{ $d->totalweight }} kg</td>
+                        <td>{{ get_Shop_amount($d->masterid,-2,-1) }} Rs</td>
+                    </tr>
+                @endforeach
 
                 </tbody>
 
@@ -70,13 +70,13 @@
                         $firstday = get_five_days_record(-3,-2);
                         
                     @endphp
-                     @foreach ($firstday as $d)
-                     <tr>
-                         <th scope="row">{{ $d->shop_name_only }}</th>
-                         <td>{{ $d->shop_forth_weight }} kg</td>
-                         <td>{{ $d->shop_forth_amount }} Rs</td>
-                     </tr>
-                 @endforeach
+                      @foreach ($firstday as $d)
+                      <tr>
+                          <th scope="row">{{ $d->shopname }}</th>
+                          <td>{{ $d->totalweight }} kg</td>
+                          <td>{{ get_Shop_amount($d->masterid,-3,-2) }} Rs</td>
+                        </tr>
+                  @endforeach
 
                 </tbody>
 
@@ -113,13 +113,13 @@
                         $firstday = get_five_days_record(-4,-3);
                         
                     @endphp
-                     @foreach ($firstday as $d)
-                     <tr>
-                         <th scope="row">{{ $d->shop_name_only }}</th>
-                         <td>{{ $d->shop_fifth_weight }} kg</td>
-                         <td>{{ $d->shop_fifth_amount }} Rs</td>
-                     </tr>
-                 @endforeach
+                       @foreach ($firstday as $d)
+                       <tr>
+                           <th scope="row">{{ $d->shopname }}</th>
+                           <td>{{ $d->totalweight }} kg</td>
+                           <td>{{ get_Shop_amount($d->masterid,-4,-3) }} Rs</td>
+                        </tr>
+                   @endforeach
 
                 </tbody>
 

@@ -160,6 +160,8 @@ class AdminController extends Controller
 	}
 	public function home()
 	{
+				
+
 		$user = Session::get('userdata');
 		if ($user['role'] == 1) {
 			$this->data['totalteleorder'] = Telebookorder::where('orderfrom', 'telecaller')->count();

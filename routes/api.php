@@ -27,6 +27,7 @@ Route::post('check_mobile_no', 'Api_controller@check_mobile_no')->name('check_mo
 
 Route::get('get_items_api', 'Api_controller@get_items_api')->name('get_items_api');
 Route::get('get_items_api_weighing_machine', 'Api_controller@get_items_api_weighing_machine')->name('get_items_api_weighing_machine');
+
 Route::get('get_items_api2', 'Api_controller@get_items_api2')->name('get_items_api2');
 Route::get('get_Shop_lat_long', 'Api_controller@get_Shop_lat_long')->name('get_Shop_lat_long');
 

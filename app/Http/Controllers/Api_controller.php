@@ -170,16 +170,18 @@ class Api_controller extends Controller
 		// $data['offer_product']=Item::select('itemname', 'id', 'retailrate', 'hotelrate', 'image', 'stock')->where('type',2)->orderby('id', 'asc')->get();
 		return response()->json(Item::select('itemname', 'id', 'retailrate', 'hotelrate', 'image', 'stock')->where('type', 1)->orderby('id', 'asc')->get());
 	}
-
+	
 	public function get_items_api_weighing_machine()
 	{
+		// $data['regular_product']=Item::select('itemname', 'id', 'retailrate', 'hotelrate', 'image', 'stock')->where('type',1)->orwhere('type',2)->orderby('id', 'asc')->get();
+		// $data['offer_product']=Item::select('itemname', 'id', 'retailrate', 'hotelrate', 'image', 'stock')->where('type',2)->orderby('id', 'asc')->get();
 		return response()->json(
 			[
 				'items'=>Item::select('itemname', 'id', 'retailrate', 'hotelrate', 'image', 'stock')->where('type', 1)->orderby('id', 'asc')->get(),
 				'mobile'=>'7499312963'
 			]);
 	}
-
+	
 	public function get_items_api2()
 	{
 		$data['regular_product'] = Item::select('itemname', 'id', 'retailrate', 'hotelrate', 'image', 'stock')->where('type', 1)->orwhere('type', 2)->orderby('id', 'asc')->get();
