@@ -158,54 +158,92 @@ class AdminController extends Controller
 		Area_master::where('shop_id', $y['id'])->update(['shop_id' => 0]);
 		echo json_encode($request->id);
 	}
-	public function home()
-	{
-				
-
+	public function home( Request $request)
+	{ 
+		//dd($request->all());
+		
 		$user = Session::get('userdata');
 		if ($user['role'] == 1) {
-			$this->data['totalteleorder'] = Telebookorder::where('orderfrom', 'telecaller')->count();
-			$this->data['apporder'] = Telebookorder::where('orderfrom', 'app')->count();
-			$this->data['totalshoporder'] = DB::table('shopbookorders')->count();
-			$this->data['totalcancelorder'] = App_cancel_order::count();
-			$this->data['totalordercomplete'] = Telebookorder::where('collectedcash', '>', '0')->count();
+			$telebookorderQuery = Telebookorder::where('orderfrom', 'telecaller');
+			$apporderQuery = Telebookorder::where('orderfrom', 'app');
+			$shopbookordersQuery = DB::table('shopbookorders');
+			$appCancelOrderQuery = App_cancel_order::query();
+			$telebookorderCompleteQuery = Telebookorder::where('collectedcash', '>', '0');
+			$fromDate=null; 
+			$toDate=null;
+			if ($request->fromdate && $request->todate) {
+				$fromDate = \Carbon\Carbon::parse($request->fromdate)->startOfDay();
+            	$toDate = \Carbon\Carbon::parse($request->todate)->endOfDay();
+			}
+			
+			// Check if date filters are provided, and apply them if they are
+			if ($request->fromdate && $request->todate) {
+				$telebookorderQuery->whereBetween('created_at', [$fromDate, $toDate]);
+				$apporderQuery->whereBetween('created_at', [$fromDate, $toDate]);
+				$shopbookordersQuery->whereBetween('created_at', [$fromDate, $toDate]);
+				$appCancelOrderQuery->whereBetween('created_at', [$fromDate, $toDate]);
+				$telebookorderCompleteQuery->whereBetween('created_at', [$fromDate, $toDate]);
+			}
+			
+			$this->data['totalteleorder'] = $telebookorderQuery->count();
+			$this->data['apporder'] = $apporderQuery->count();
+			$this->data['totalshoporder'] = $shopbookordersQuery->count();
+			$this->data['totalcancelorder'] = $appCancelOrderQuery->count();
+			$this->data['totalordercomplete'] = $telebookorderCompleteQuery->count();
 
-			$shopdiscount = Shopbookorder::select('discount')->sum('discount');
-			$teleamount = Telebookorder::select('amount')->where('paidstatus', '1')
-				->where('user_id', null)->sum('amount');
-			$telecashcollected = Telebookorder::select('collectedcash')->where('user_id', null)->where('collectedcash', '>', 0)
-				->get()->sum('collectedcash');
+			$shopdiscount = $shopbookordersQuery->sum('discount');
+			$teleamount = Telebookorder::select('amount')
+			->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+				return $query->whereBetween('created_at', [$fromDate, $toDate]);
+			})
+			->where('paidstatus', '1')
+			->where('user_id', null)
+			->sum('amount');
+			
+			$telecashcollected = Telebookorder::select('collectedcash')
+			->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+				return $query->whereBetween('created_at', [$fromDate, $toDate]);
+			})
+			->where('user_id', null)->where('collectedcash', '>', 0)->get()
+			->sum('collectedcash');
+
 			$this->data['shopdiscount'] = $shopdiscount;
 			$this->data['telediscount'] = $teleamount - $telecashcollected;
 			$this->data['discount'] = ($teleamount - $telecashcollected) + $shopdiscount;
 			
 
-			$averagetime = Telebookorder::select('timetaken')->where('user_id', null)->where('assignto', '!=', 'null')->orderby('id','desc')->take(200)->get();
-			
-			$totaldeliverorder = Telebookorder::select('timetaken')->where('user_id', null)->where('assignto', '!=', 'null')->where('timestatus', 1)->count();
-			//$totaldeliverorder=count($totaldeliverorder);
-			//echo $totaldeliverorder;
-			// echo json_encode($this->data['averagetime']);
-			// exit();
-			$h = 0;
-			$m = 0;
-			$s = 0;
-			foreach ($averagetime as $t) {
-				$a = explode(':', $t['timetaken']);
-				$h = $h + $a[0];
-				$m = $m + $a[1];
-				$s = $s + $a[2];
-			}
-			
-			$this->data['shoptotalcollection'] = Shopbookorder::select('amount')->sum('amount');
-			$this->data['teletotalcollection'] = Telebookorder::select('amount')->where('paidstatus', 1)
-				->where('user_id', null)->sum('amount');
-			$totaltimeinsec = ($h * 3600) + ($m * 60) + $s;
-			if ($totaltimeinsec > 0) {
-				$this->data['totalaveragetime'] = gmdate('H:i:s', $totaltimeinsec / $totaldeliverorder);
+			$averagetimeQuery = Telebookorder::select('timetaken')
+			->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+				return $query->whereBetween('created_at', [$fromDate, $toDate]);
+			})
+			->where('user_id', null)
+			->where('assignto', '!=', null)
+			->orderBy('id', 'desc')
+			->take(200);
+
+			$averagetime = $averagetimeQuery->get();
+			$totaldeliverorder = $averagetimeQuery->where('timestatus', 1)->count();
+
+			$totalTimeInSeconds = $averagetime->reduce(function ($carry, $item) {
+				$timeParts = explode(':', $item->timetaken);
+				return $carry + $timeParts[0] * 3600 + $timeParts[1] * 60 + $timeParts[2];
+			}, 0);
+
+			if ($totaldeliverorder > 0) {
+				$averageTimeInSeconds = $totalTimeInSeconds / $totaldeliverorder;
+				$this->data['totalaveragetime'] = gmdate('H:i:s', $averageTimeInSeconds);
 			} else {
 				$this->data['totalaveragetime'] = 0;
 			}
+
+			$this->data['shoptotalcollection'] = $shopbookordersQuery->sum('amount');
+			$this->data['teletotalcollection'] = Telebookorder::select('amount')
+			->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+				return $query->whereBetween('created_at', [$fromDate, $toDate]);
+			})
+			->where('paidstatus', '1')
+			->where('user_id', null)
+			->sum('amount');
 			
 				return view('home', $this->data);
 		}
@@ -218,18 +256,35 @@ class AdminController extends Controller
 			return redirect()->route('login');
 		}
 	}
-	public function getitemarray()
+	public function getitemarray(Request $request)
 	{
+		$fromDate=null; 
+		$toDate=null;
+		if ($request->fromdate && $request->todate) {
+			$fromDate = \Carbon\Carbon::parse($request->fromdate)->startOfDay();
+            $toDate = \Carbon\Carbon::parse($request->todate)->endOfDay();
+		}
+			
 		$this->data['totalitem'] = Item::select('itemname')->get();
 		$itemdataarray = array();
 		$n = 0;
 		foreach ($this->data['totalitem'] as $item) {
+		$shop_weight=Shoporderlist::select('weight')
+		->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+			return $query->whereBetween('created_at', [$fromDate, $toDate]);
+		})
+		->where('itemname', $item['itemname'])->sum('weight');
+		$tele_weight=Teleorderlist::select('weight')
+		->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+			return $query->whereBetween('created_at', [$fromDate, $toDate]);
+		})
+		->where('itemname', $item['itemname'])->sum('weight');
 
 			//echo $item['itemname'];
 			$itemdataarray[$n] =
 				([
 					'itemname' => $item['itemname'],
-					'weight' => (Shoporderlist::select('weight')->where('itemname', $item['itemname'])->sum('weight')) + (Teleorderlist::select('weight')->where('itemname', $item['itemname'])->sum('weight'))
+					'weight' =>$shop_weight  + $tele_weight
 				]);
 
 			$n++;
@@ -466,7 +521,7 @@ class AdminController extends Controller
 		$msg = urlencode($request->msg);
 		$to = $request->mobile;
 		$template_id=$request->template_id;
-		 $data1 = "uname=habitm1&pwd=habitm1&senderid=AMFOOD&to=" . $to . "&msg=" . $msg . "&route=T&peid=1001880907683289176&tempid=".$template_id;				
+		 $data1 = "uname=habitm1&pwd=habitm1&senderid=AHFPVT&to=" . $to . "&msg=" . $msg . "&route=T&peid=1701170071671948377&tempid=".$template_id;				
 		$ch = curl_init('http://bulksms.webmediaindia.com/sendsms?');
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data1);

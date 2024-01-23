@@ -27,6 +27,8 @@ Route::post('check_mobile_no', 'Api_controller@check_mobile_no')->name('check_mo
 
 Route::get('get_items_api', 'Api_controller@get_items_api')->name('get_items_api');
 Route::get('get_items_api_weighing_machine', 'Api_controller@get_items_api_weighing_machine')->name('get_items_api_weighing_machine');
+Route::get('get_google_api_key', 'Api_controller@get_google_api_key')->name('get_google_api_key');
+
 
 Route::get('get_items_api2', 'Api_controller@get_items_api2')->name('get_items_api2');
 Route::get('get_Shop_lat_long', 'Api_controller@get_Shop_lat_long')->name('get_Shop_lat_long');
@@ -108,7 +110,6 @@ Route::get('create_order_api', 'Api_controller@create_order_api')->name('create_
 
 
 //shopoporder using machine
-
 Route::post('generate_shop_order', 'Api_controller@generate_shop_order')->name('generate_shop_order');
 
 Route::post('send-sms','AdminController@send_sms');

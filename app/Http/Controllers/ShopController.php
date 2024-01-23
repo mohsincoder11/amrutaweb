@@ -253,11 +253,10 @@ if(isset($request->date) && $request->date!=null){
 					$olddata = Telebookorder::where('orderfrom', 'telecaller')->where('id', $n)->first();
 
 					$usermobileno = Telebookorder::where('orderfrom', 'telecaller')->select('mobile')->where('id', $n)->first();
-
 					$mode = "Download";
-					$msg = 'Your order is out for delivery and it will be deliver to you in while . The delivery master is ' . $y['name'] . ' and his mobile no is ' . $y['mobile'] . '. Amruta Hatcheries & Foods. ' . $mode . ' the app now https://play.google.com/store/apps/details?id=com.ffc.www';
+					$msg='Your order is out for delivery and it will be delivered to you in a while. The delivery master is '.$y['name'].' and his mobile no is '.$y['mobile'].'. Amruta Hatcheries & Foods. '.$mode.' the app now https://play.google.com/store/apps/details?id=com.ffc.www';
 					$msg = urlencode($msg);
-					$data1 = "uname=habitm1&pwd=habitm1&senderid=AMFOOD&to=" . $usermobileno['mobile'] . "&msg=" . $msg . "&route=T&peid=1001880907683289176&tempid=1007416445555979434";
+					$data1 = "uname=habitm1&pwd=habitm1&senderid=AHFPVT&to=" . $usermobileno['mobile'] . "&msg=" . $msg . "&route=T&peid=1701170071671948377&tempid=1707170080589215606";
 					$ch = curl_init('http://bulksms.webmediaindia.com/sendsms?');
 					curl_setopt($ch, CURLOPT_POST, true);
 					curl_setopt($ch, CURLOPT_POSTFIELDS, $data1);
@@ -313,7 +312,7 @@ if(isset($request->date) && $request->date!=null){
 		//   		$msg='Your order is out for delivery. The delivery master is '.$y['name'].' and his mobile no is '.$y['mobile'].'.\nAmruta Hatcheries & Foods.';
 		// 	$msg=urlencode($msg);
 		// 	$to=$m['mobile'];  
-		// 	$data1="uname=habitm1&pwd=habitm1&senderid=AMFOOD&to=".$to."&msg=".$msg."&route=T&peid=1001880907683289176&tempid=1007949744049917032";
+		// 	$data1="uname=habitm1&pwd=habitm1&senderid=AHFPVT&to=".$to."&msg=".$msg."&route=T&peid=1701170071671948377&tempid=1007949744049917032";
 		// 	$ch = curl_init('http://bulksms.webmediaindia.com/sendsms?');
 		// 	curl_setopt($ch, CURLOPT_POST, true);
 		// 	curl_setopt($ch, CURLOPT_POSTFIELDS, $data1);
@@ -531,7 +530,7 @@ if(isset($request->date) && $request->date!=null){
 					->where('orderfrom', 'app')->orderby('id', 'desc')->get();
 			}
 		}
-		$this->data['delivery_charge'] = 10;
+		$this->data['delivery_charge'] = env('delivery_charge');
 		return view('Shop.apporders', $this->data);
 	}
 
@@ -569,7 +568,7 @@ if(isset($request->date) && $request->date!=null){
 					->where('orderfrom', 'app')->orderby('id', 'desc')->get();
 			}
 		}
-		$this->data['delivery_charge'] = 10;
+		$this->data['delivery_charge'] = env('delivery_charge');
 		return view('Shop.apporders', $this->data);
 	}
 
@@ -612,10 +611,10 @@ if(isset($request->date) && $request->date!=null){
 						'status' => '1',
 					]);
 					$mode = "Rate";
-					$msg = 'Your order is out for delivery and it will be deliver to you in while . The delivery master is ' . $y['name'] . ' and his mobile no is ' . $y['mobile'] . '. Amruta Hatcheries & Foods. ' . $mode . ' the app now https://play.google.com/store/apps/details?id=com.ffc.www';
+					$msg = 'Your order is out for delivery and it will be delivered to you in a while. The delivery master is '.$y['name'].' and his mobile no is '.$y['mobile'].'. Amruta Hatcheries & Foods. '.$mode.' the app now https://play.google.com/store/apps/details?id=com.ffc.www';
 					$msg = urlencode($msg);
 					$to = $n['mobile'];
-					$data1 = "uname=habitm1&pwd=habitm1&senderid=AMFOOD&to=" . $n['mobile'] . "&msg=" . $msg . "&route=T&peid=1001880907683289176&tempid=1007416445555979434";
+					$data1 = "uname=habitm1&pwd=habitm1&senderid=AHFPVT&to=" . $n['mobile'] . "&msg=" . $msg . "&route=T&peid=1701170071671948377&tempid=1707170080589215606";
 
 					$ch = curl_init('http://bulksms.webmediaindia.com/sendsms?');
 					curl_setopt($ch, CURLOPT_POST, true);

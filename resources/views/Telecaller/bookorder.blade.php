@@ -225,7 +225,7 @@
                         </div>
                         <div class="col-md-4" style="margin-top:15px;">
                           <label>Delivery Charges<font color="#FF0000">*</font></label>
-                          <input type="number" placeholder="Delivery Charges" class="form-control" id="delivery_charge" value="10" name="delivery_charge" style="font-size: 18px;color:#555" readonly="" autocomplete="off" />
+                          <input type="number" placeholder="Delivery Charges" class="form-control" id="delivery_charge" value="{{env('delivery_charge')}}" name="delivery_charge" style="font-size: 18px;color:#555" readonly="" autocomplete="off" />
                         </div>
 
                        

@@ -229,7 +229,7 @@ if(isset($request->date) && $request->date!=null){
 
 	public function tele_app_orders()
 	{
-		$this->data['delivery_charge']=10;		
+		$this->data['delivery_charge']=env('delivery_charge');
 		$this->data['apporder'] = Telebookorder::whereRaw('DATE(created_at) = ?', date('Y-m-d'))
 		->where('orderfrom','app')->orderby('id', 'desc')->get();
 		return view('Telecaller.tele_app_orders', $this->data);

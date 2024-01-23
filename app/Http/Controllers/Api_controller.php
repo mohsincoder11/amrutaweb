@@ -39,11 +39,18 @@ use App\Promotional_images;
 
 class Api_controller extends Controller
 {
+	protected $delivery_charge;
+	protected $minimum_cart_value=200;
+	public function __construct()
+    {
+        $this->delivery_charge = env('delivery_charge');
+    }
+
+	
 	public function get_coupon_api()
 	{
 		return response()->json(DB::table('coupon-masters')->orderby('id', 'desc')->get());
 	}
-
 
 	public function login_api(Request $request)
 	{
@@ -54,6 +61,7 @@ class Api_controller extends Controller
 			return response()->json('error');
 		}
 	}
+
 	public function check_mobile_no(Request $request)
 	{
 		$user_data = App_user::where('mob', $request->mob)->first();
@@ -63,13 +71,14 @@ class Api_controller extends Controller
 			return response()->json(0);
 		}
 	}
+
 	public function send_reguser_otp(Request $request)
 	{
 		$otp = rand('1000', '9999');
-		$msg = 'Your OTP verification code for registration is ' . $otp . '. Amruta Hatcheries & Foods.';
+		$msg = "Your OTP verification code for registration is $otp. Amruta Hatcheries & Foods.";
 		$msg = urlencode($msg);
 		$to = $request->mob;
-		$data1 = "uname=habitm1&pwd=habitm1&senderid=AMFOOD&to=" . $to . "&msg=" . $msg . "&route=T&peid=1001880907683289176&tempid=1007313590255895609";
+		$data1 = "uname=habitm1&pwd=habitm1&senderid=AHFPVT&to=" . $to . "&msg=" . $msg . "&route=T&peid=1701170071671948377&tempid=1707170080539227431";
 		$ch = curl_init('http://bulksms.webmediaindia.com/sendsms?');
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data1);
@@ -78,14 +87,15 @@ class Api_controller extends Controller
 		curl_close($ch);
 		return response()->json($otp);
 	}
+
 	public function forgot_password_otp(Request $request)
 	{
 
 		$otp = rand('1000', '9999');
-		$msg = 'Your OTP verification code for password set or change request is ' . $otp . '. Amruta Hatcheries & Foods.';
+		$msg = "Your OTP verification code for password set or change request is $otp. Amruta Hatcheries & Foods.";
 		$msg = urlencode($msg);
 		$to = $request->mob;
-		$data1 = "uname=habitm1&pwd=habitm1&senderid=AMFOOD&to=" . $to . "&msg=" . $msg . "&route=T&peid=1001880907683289176&tempid=1007815211240576240";
+		$data1 = "uname=habitm1&pwd=habitm1&senderid=AHFPVT&to=" . $to . "&msg=" . $msg . "&route=T&peid=1701170071671948377&tempid=1707170080546502986";
 		$ch = curl_init('http://bulksms.webmediaindia.com/sendsms?');
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data1);
@@ -94,6 +104,7 @@ class Api_controller extends Controller
 		curl_close($ch);
 		return response()->json($otp);
 	}
+
 	public function update_password_api(Request $request)
 	{
 		$insert = App_user::where('mob', $request->mob)->update([
@@ -102,6 +113,7 @@ class Api_controller extends Controller
 		]);
 		return response()->json('success');
 	}
+
 	public function register_user_api(Request $request)
 	{
 		if ($request->mob && $request->full_name && $request->email && $request->pass) {
@@ -266,7 +278,7 @@ class Api_controller extends Controller
 				'mobile' => $request->mobile,
 				'address' => $request->address,
 				'lat_long' => $request->lat_long,
-				'delivery_charge' => 10,
+				'delivery_charge' => $this->delivery_charge,
 				'amount' => $request->amount,
 				'area_id' => $request->area_id,
 				'mop' => $request->mop,
@@ -306,10 +318,10 @@ class Api_controller extends Controller
 				]);
 			}
 
-			$msg = "Your order has been successfully placed & will be delivered to you soon. For more details check 'order details' in app. Amruta Hatcheries & Foods.";
+			$msg = "Your order has been successfully placed & will be delivered to you soon. For more details check 'order details' in the app. Amruta Hatcheries & Foods.";
 			$msg = urlencode($msg);
 			$to = $request->mobile;
-			$data1 = "uname=habitm1&pwd=habitm1&senderid=AMFOOD&to=" . $to . "&msg=" . $msg . "&route=T&peid=1001880907683289176&tempid=1007263064641635131";
+			$data1 = "uname=habitm1&pwd=habitm1&senderid=AHFPVT&to=" . $to . "&msg=" . $msg . "&route=T&peid=1701170071671948377&tempid=1707170080554230434";
 			$ch = curl_init('http://bulksms.webmediaindia.com/sendsms?');
 			curl_setopt($ch, CURLOPT_POST, true);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $data1);
@@ -354,7 +366,7 @@ class Api_controller extends Controller
 				'mobile' => $request->mobile,
 				'address' => $request->address,
 				'lat_long' => $request->lat_long,
-				'delivery_charge' => 10,
+				'delivery_charge' => $this->delivery_charge,
 				'amount' => $request->amount,
 				'area_id' => $request->area_id,
 				'mop' => $request->mop,
@@ -374,10 +386,10 @@ class Api_controller extends Controller
 			]);
 
 
-			$msg = "Your order has been successfully placed & will be delivered to you soon. For more details check 'order details' in app. Amruta Hatcheries & Foods.";
+			$msg = "Your order has been successfully placed & will be delivered to you soon. For more details check 'order details' in the app. Amruta Hatcheries & Foods.";
 			$msg = urlencode($msg);
 			$to = $request->mobile;
-			$data1 = "uname=habitm1&pwd=habitm1&senderid=AMFOOD&to=" . $to . "&msg=" . $msg . "&route=T&peid=1001880907683289176&tempid=1007263064641635131";
+			$data1 = "uname=habitm1&pwd=habitm1&senderid=AHFPVT&to=" . $to . "&msg=" . $msg . "&route=T&peid=1701170071671948377&tempid=1707170080554230434";
 			$ch = curl_init('http://bulksms.webmediaindia.com/sendsms?');
 			curl_setopt($ch, CURLOPT_POST, true);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $data1);
@@ -425,7 +437,7 @@ class Api_controller extends Controller
 					'mobile' => $request->mobile,
 					'address' => $request->address,
 					'lat_long' => $request->lat_lan,
-					'delivery_charge' => 10,
+					'delivery_charge' => $this->delivery_charge,
 					'amount' => $request->amount,
 					'shopname' => $request->shop_id,
 					'mop' => $request->mop,
@@ -467,10 +479,10 @@ class Api_controller extends Controller
 					]);
 				}
 
-				$msg = "Your order has been successfully placed & will be delivered to you soon. For more details check 'order details' in app. Amruta Hatcheries & Foods.";
+				$msg = "Your order has been successfully placed & will be delivered to you soon. For more details check 'order details' in the app. Amruta Hatcheries & Foods.";
 				$msg = urlencode($msg);
 				$to = $request->mobile;
-				$data1 = "uname=habitm1&pwd=habitm1&senderid=AMFOOD&to=" . $to . "&msg=" . $msg . "&route=T&peid=1001880907683289176&tempid=1007263064641635131";
+				$data1 = "uname=habitm1&pwd=habitm1&senderid=AHFPVT&to=" . $to . "&msg=" . $msg . "&route=T&peid=1701170071671948377&tempid=1707170080554230434";
 				$ch = curl_init('http://bulksms.webmediaindia.com/sendsms?');
 				curl_setopt($ch, CURLOPT_POST, true);
 				curl_setopt($ch, CURLOPT_POSTFIELDS, $data1);
@@ -525,7 +537,8 @@ class Api_controller extends Controller
 				->where('orderfrom', 'app')
 				->select('teleorderlists.*', 'items.image')->orderby('teleorderlists.id', 'desc')->get(),
 			'wallet_credit' => $wallet_credit ? $wallet_credit->total_credit : 0,
-			'minimum_cart_value'=>200,
+			'minimum_cart_value'=>$this->minimum_cart_value,
+			'delivery_charge'=>$this->delivery_charge,
 		];
 
 		return response()->json($data);
@@ -940,10 +953,10 @@ class Api_controller extends Controller
 		$check = Deliveryboy::where('mobile', $request->mobile)->first();
 		if ($check) {
 			$otp = rand('1000', '9999');
-			$msg = 'Your OTP verification code for password set or change request is ' . $otp . '. Amruta Hatcheries & Foods.';
+			$msg = "Your OTP verification code for password set or change request is $otp. Amruta Hatcheries & Foods.";
 			$msg = urlencode($msg);
 			$to = $request->mobile;
-			$data1 = "uname=habitm1&pwd=habitm1&senderid=AMFOOD&to=" . $to . "&msg=" . $msg . "&route=T&peid=1001880907683289176&tempid=1007815211240576240";
+			$data1 = "uname=habitm1&pwd=habitm1&senderid=AHFPVT&to=" . $to . "&msg=" . $msg . "&route=T&peid=1701170071671948377&tempid=1707170080546502986";
 			$ch = curl_init('http://bulksms.webmediaindia.com/sendsms?');
 			curl_setopt($ch, CURLOPT_POST, true);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $data1);
@@ -1013,7 +1026,6 @@ class Api_controller extends Controller
 
 	public function collect_amount_by_deliveryboy(Request $request)
 	{
-
 		if ($request->collectedcash && $request->id) {
 			$currenttime = date('Y-m-d H:i:s');
 			$time1 = Telebookorder::find($request->id);
@@ -1033,10 +1045,11 @@ class Api_controller extends Controller
 			if ($time1['orderfrom'] == "telecaller") {
 				$mode = "Download";
 			}
-			$msg = 'Your order of ' . $time1['amount'] . ' rupees including ' . $time1['delivery_charge'] . ' rupees of delivery charges has been successfully delivered. Amruta Hatcheries & Foods. ' . $mode . ' the app now https://play.google.com/store/apps/details?id=com.ffc.www';
+			
+			$msg='Your order of '.$time1['amount'].' rupees including'.$time1['delivery_charge'].' rupees of delivery charges has been successfully delivered. Amruta Hatcheries & Foods. '.$mode.' the app now https://play.google.com/store/apps/details?id=com.ffc.www';
 			$msg = urlencode($msg);
 			$to = $time1['mobile'];
-			$data1 = "uname=habitm1&pwd=habitm1&senderid=AMFOOD&to=" . $to . "&msg=" . $msg . "&route=T&peid=1001880907683289176&tempid=1007314452660538248";
+			$data1 = "uname=habitm1&pwd=habitm1&senderid=AHFPVT&to=" . $to . "&msg=" . $msg . "&route=T&peid=1701170071671948377&tempid=1707170080576884135";
 			$ch = curl_init('http://bulksms.webmediaindia.com/sendsms?');
 			curl_setopt($ch, CURLOPT_POST, true);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $data1);
@@ -1049,6 +1062,7 @@ class Api_controller extends Controller
 			return response()->json(0);
 		}
 	}
+	
 	public function pick_order_by_deliveryboy(Request $request)
 	{
 		if ($request->id) {
@@ -1060,6 +1074,7 @@ class Api_controller extends Controller
 			return response()->json(0);
 		}
 	}
+
 	public function drop_order_by_deliveryboy(Request $request)
 	{
 		if ($request->id) {
@@ -1074,7 +1089,6 @@ class Api_controller extends Controller
 
 	public function cancel_order_by_deliveryboy(Request $request)
 	{
-
 		DB::table('telebookorders')->where('id', $request->cancelid)->update([
 			'status' => '-1',
 			'paidstatus' => '-1',
@@ -1089,6 +1103,7 @@ class Api_controller extends Controller
 		]);
 		return response()->json(1);
 	}
+
 	public function get_meter_reading_history(Request $request)
 	{
 		$data = DB::table('meter_reading')->where('user_id', $request->user_id)->orderby('id', 'desc')->get();
@@ -1129,7 +1144,6 @@ class Api_controller extends Controller
 		]);
 		return response()->json($order->id);
 	}
-
 
 	//generate shop order from machine
 	public function generate_shop_order(Request $request)
@@ -1197,5 +1211,11 @@ class Api_controller extends Controller
 	function getallpromotion()
 	{
 		return response()->json(Promotional_images::get());
+	}
+
+	public function get_google_api_key(){
+	$api_key='AIzaSyC1Cz13aBYAbBYJL0oABZ8KZnd7imiWwA4';
+	//$api_key='AIzaSyC1kU2qPwMsA-VTbi1fm6kb9M8d7utT0rI';
+		return response()->json(['status'=>true,'api_key'=>$api_key]);
 	}
 }

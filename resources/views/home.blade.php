@@ -27,14 +27,6 @@
          </div>
 
 
-
-
-
-
-
-
-
-
          <div class="row">
              <div class="col-md-12">
 
@@ -43,6 +35,39 @@
 
 
                      <div class="panel-body" style=" margin-bottom:15px;">
+            <div class="row" style="padding:10px 0 20px 0;">
+                <form action="" method="get">
+
+                <div class="col-md-2" style="padding-left:5px; padding-right:2px;">
+                    <label>Start Date<font color="#FF0000"></font></label>
+                    <div class="input-group">
+                        <input type="text" value="" name="fromdate" id="fromdate" class="form-control " data-date-format="dd-mm-yyyy" data-date-viewmode="years" />
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                </div>
+
+                <div class="col-md-2" style="padding-left:5px; padding-right:2px;">
+                    <label>End Date<font color="#FF0000"></font></label>
+                    <div class="input-group">
+                        <input type="text" value="" name="todate" id="todate" class="form-control " data-date-format="dd-mm-yyyy" data-date-viewmode="years" />
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                </div>
+                <div class="col-md-2" style="padding-left:5px; padding-right:2px;">
+                    <div class="input-group col-md-12" style="margin-top:22px;">
+
+                        <button type="submit" class="btn btn-primary col-md-12"><span class="fa fa-search"></span> Search</button>
+                    </div>
+                </div> 
+                <div class="col-md-2" style="padding-left:5px; padding-right:2px;">
+                    <div class="input-group col-md-12" style="margin-top:22px;">
+
+                        <a href="{{route('home')}}" class="btn btn-primary col-md-12"><span class="fa fa-reload"></span> Refresh</a>
+                    </div>
+                </div>
+            </form>
+
+            </div>
 
                          <div class="row">
 
@@ -187,6 +212,14 @@
 
      <script type="text/javascript">
          $(document).ready(function() {
+            $("#fromdate").datepicker({
+			dateFormat: "dd-mm-yyyy"
+            }).datepicker("setDate", '{{app()->request->input('fromdate') ?? 'new Date()'}}');
+
+            $("#todate").datepicker({
+                dateFormat: "dd-mm-yyyy"
+            }).datepicker("setDate", '{{app()->request->input('todate') ?? 'new Date()'}}');
+
 
             $("#five_days_sale").append(' <div class="loader2">        <div class="loader-wheel"></div>        <div class="loader-text"></div>      </div>');
              $('#collapseOne').collapse('show');
@@ -264,6 +297,10 @@
              $.ajax({
                  type: "GET",
                  dataType: "json",
+                 data:{
+                    fromdate:'{{app()->request->input('fromdate')}}',
+                    todate:'{{app()->request->input('todate')}}',
+                 },
                  url: 'getitemarray',
                  success: function(data) {
                      //console.log(data);
