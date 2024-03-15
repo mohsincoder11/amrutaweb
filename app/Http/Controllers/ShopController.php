@@ -79,32 +79,32 @@ class ShopController extends Controller
 
 		$get = Shopbookorder::where('id', $request->id)->first();
 		$this->data['records'] = Shopbookorder::where('id', $request->id)->delete();
-		$this->data['records'] = Shoporderlist::where('orderid', $get['orderid'])->delete();
+		$this->data['records'] = Shoporderlist::where('orderid', $get['orderid'])->where('masterid',$get['masterid'] )->delete();
 		echo json_encode($request->id);
 	}
 
 	public function shoporder(Request $request)
 	{
-		$date=date('Y-m-d');
-if(isset($request->date) && $request->date!=null){
-	$date= date('Y-m-d',strtotime($request->date));
-}
+		$date = date('Y-m-d');
+		if (isset($request->date) && $request->date != null) {
+			$date = date('Y-m-d', strtotime($request->date));
+		}
 
 		$userdata = Session::get('userdata');
 		if ($userdata['shop'] == 1) {
 			if ($userdata['role'] == 1 || $userdata['role'] == 3) {
-				$this->data['shop'] = Shopbookorder::whereRaw('DATE(created_at) = ?',$date)
+				$this->data['shop'] = Shopbookorder::whereRaw('DATE(created_at) = ?', $date)
 					->orderby('id', 'desc')->get();
 				// echo json_encode($this->data['shop']);
 				// exit();
-				$this->data['orderlist'] = Shoporderlist::whereRaw('DATE(created_at) = ?',$date)
+				$this->data['orderlist'] = Shoporderlist::whereRaw('DATE(created_at) = ?', $date)
 					->get();
 			} else {
-				$this->data['shop'] = Shopbookorder::where('masterid', $userdata['id'])->whereRaw('DATE(created_at) = ?',$date)
+				$this->data['shop'] = Shopbookorder::where('masterid', $userdata['id'])->whereRaw('DATE(created_at) = ?', $date)
 					->orderby('id', 'desc')->get();
 				// echo json_encode($this->data['shop']);
 				// exit();
-				$this->data['orderlist'] = Shoporderlist::whereRaw('DATE(created_at) = ?',$date)
+				$this->data['orderlist'] = Shoporderlist::whereRaw('DATE(created_at) = ?', $date)
 					->get();
 			}
 
@@ -213,7 +213,7 @@ if(isset($request->date) && $request->date!=null){
 
 		$this->data['itemlist'] = Teleorderlist::where('orderid', $this->data['shoporder']->id)->where('orderfrom', 'app')->get();
 		$sdata = $this->data['shoporder'];
-		$this->data['credit_used']=DB::table('wallets')->where('order_id',$request->id)->select('used_credit')->first();
+		$this->data['credit_used'] = DB::table('wallets')->where('order_id', $request->id)->select('used_credit')->first();
 		return View('pdf/printappbill2', $this->data);
 	}
 
@@ -232,7 +232,7 @@ if(isset($request->date) && $request->date!=null){
 
 			$i = 0;
 			$this->data['shop'] = array();
-			$ordernofor=array();
+			$ordernofor = array();
 			foreach ($new as $n) {
 				if ($n != "") {
 
@@ -253,8 +253,9 @@ if(isset($request->date) && $request->date!=null){
 					$olddata = Telebookorder::where('orderfrom', 'telecaller')->where('id', $n)->first();
 
 					$usermobileno = Telebookorder::where('orderfrom', 'telecaller')->select('mobile')->where('id', $n)->first();
+
 					$mode = "Download";
-					$msg='Your order is out for delivery and it will be delivered to you in a while. The delivery master is '.$y['name'].' and his mobile no is '.$y['mobile'].'. Amruta Hatcheries & Foods. '.$mode.' the app now https://play.google.com/store/apps/details?id=com.ffc.www';
+					$msg = 'Your order is out for delivery and it will be delivered to you in a while. The delivery master is ' . $y['name'] . ' and his mobile no is ' . $y['mobile'] . '. Amruta Hatcheries & Foods. ' . $mode . ' the app now https://play.google.com/store/apps/details?id=com.ffc.www';
 					$msg = urlencode($msg);
 					$data1 = "uname=habitm1&pwd=habitm1&senderid=AHFPVT&to=" . $usermobileno['mobile'] . "&msg=" . $msg . "&route=T&peid=1701170071671948377&tempid=1707170080589215606";
 					$ch = curl_init('http://bulksms.webmediaindia.com/sendsms?');
@@ -272,7 +273,7 @@ if(isset($request->date) && $request->date!=null){
 				}
 				//echo json_encode($ordernofor).'<br>';
 				$x = 0;
-				$newno=[];
+				$newno = [];
 				foreach ($ordernofor as $o) {
 					$newno[$x] = $o['orderno'];
 					$x++;
@@ -312,7 +313,7 @@ if(isset($request->date) && $request->date!=null){
 		//   		$msg='Your order is out for delivery. The delivery master is '.$y['name'].' and his mobile no is '.$y['mobile'].'.\nAmruta Hatcheries & Foods.';
 		// 	$msg=urlencode($msg);
 		// 	$to=$m['mobile'];  
-		// 	$data1="uname=habitm1&pwd=habitm1&senderid=AHFPVT&to=".$to."&msg=".$msg."&route=T&peid=1701170071671948377&tempid=1007949744049917032";
+		// 	$data1="uname=habitm1&pwd=habitm1&senderid=AMFOOD&to=".$to."&msg=".$msg."&route=T&peid=1001880907683289176&tempid=1007949744049917032";
 		// 	$ch = curl_init('http://bulksms.webmediaindia.com/sendsms?');
 		// 	curl_setopt($ch, CURLOPT_POST, true);
 		// 	curl_setopt($ch, CURLOPT_POSTFIELDS, $data1);
@@ -416,7 +417,7 @@ if(isset($request->date) && $request->date!=null){
 		if ($request->orderid == '') {
 			$getsingle = Shoporderlist::select('orderid')->orderBy('id', 'desc')->first();
 			if ($getsingle != '') {
-				$orderid = $getsingle['orderid'] + 1;
+				$orderid = time().rand(10000,99999);
 			} else {
 				$orderid = 1;
 			}
@@ -454,38 +455,37 @@ if(isset($request->date) && $request->date!=null){
 			->whereDate('shoporderlists.created_at', '>=', date('Y-m-d', strtotime($request->date)))->whereDate('shoporderlists.created_at', '<=', date('Y-m-d', strtotime($request->date)))->select('shoporderlists.orderid', 'weight')
 			->sum('weight');
 		$petfood_id = Item::select('itemname')->where('type', 4)->first();
-		$petfood_weight=0;
-		if($petfood_id)
-		{
+		$petfood_weight = 0;
+		if ($petfood_id) {
 			$petfood_weight = DB::table('shoporderlists')
-			->join('shopbookorders', function ($join) use ($request) {
-				$join->on('shopbookorders.orderid', '=', 'shoporderlists.orderid')
-					->where('shopbookorders.masterid', '=', $request->shop_id);
-			})
-			->where('shoporderlists.itemname', $petfood_id['itemname'])
-			->whereDate('shoporderlists.created_at', '>=', date('Y-m-d', strtotime($request->date)))->whereDate('shoporderlists.created_at', '<=', date('Y-m-d', strtotime($request->date)))->select('shoporderlists.orderid', 'weight')
-			->sum('weight');
+				->join('shopbookorders', function ($join) use ($request) {
+					$join->on('shopbookorders.orderid', '=', 'shoporderlists.orderid')
+						->where('shopbookorders.masterid', '=', $request->shop_id);
+				})
+				->where('shoporderlists.itemname', $petfood_id['itemname'])
+				->whereDate('shoporderlists.created_at', '>=', date('Y-m-d', strtotime($request->date)))->whereDate('shoporderlists.created_at', '<=', date('Y-m-d', strtotime($request->date)))->select('shoporderlists.orderid', 'weight')
+				->sum('weight');
 		}
-		
+
 		$shop_id = Shop::select('masterid')->where('userid', $request->shop_id)->first();
 		$ck_and_gk = StockDispose::select('salable_chicken', 'salable_g_k')->where('shop_id', $shop_id->masterid)
 			->WhereDate('created_at', \Carbon\Carbon::today())
 			->first();
-			$opening_amount=\App\Dailyentry::select('closing_amount')->where('user_id',$request->shop_id)->orderby('id','desc')->first();
-			
+		$opening_amount = \App\Dailyentry::select('closing_amount')->where('user_id', $request->shop_id)->orderby('id', 'desc')->first();
+
 		if ($ck_and_gk) {
 			$data = [
 				'weight' => $totalweight - $petfood_weight,
 				'salable_chicken' => $ck_and_gk['salable_chicken'],
 				'salable_kaleji' => $ck_and_gk['salable_g_k'],
-				'opening_amount'=>$opening_amount ? $opening_amount['closing_amount'] : 0
+				'opening_amount' => $opening_amount ? $opening_amount['closing_amount'] : 0
 			];
 		} else {
 			$data = [
 				'weight' => $totalweight - $petfood_weight,
 				'salable_chicken' => 0,
 				'salable_kaleji' => 0,
-				'opening_amount'=>$opening_amount ? $opening_amount['closing_amount'] : 0
+				'opening_amount' => $opening_amount ? $opening_amount['closing_amount'] : 0
 			];
 		}
 
@@ -536,10 +536,10 @@ if(isset($request->date) && $request->date!=null){
 
 	public function apporders(Request $request)
 	{
-		$date=date('Y-m-d');
-if(isset($request->date) && $request->date!=null){
-	$date= date('Y-m-d',strtotime($request->date));
-}
+		$date = date('Y-m-d');
+		if (isset($request->date) && $request->date != null) {
+			$date = date('Y-m-d', strtotime($request->date));
+		}
 		Telebookorder::whereRaw('DATE(created_at) = ?', $date)
 			->where('orderfrom', 'app')
 			->update(['view_status' => 1]);
@@ -611,7 +611,7 @@ if(isset($request->date) && $request->date!=null){
 						'status' => '1',
 					]);
 					$mode = "Rate";
-					$msg = 'Your order is out for delivery and it will be delivered to you in a while. The delivery master is '.$y['name'].' and his mobile no is '.$y['mobile'].'. Amruta Hatcheries & Foods. '.$mode.' the app now https://play.google.com/store/apps/details?id=com.ffc.www';
+					$msg = 'Your order is out for delivery and it will be delivered to you in a while. The delivery master is ' . $y['name'] . ' and his mobile no is ' . $y['mobile'] . '. Amruta Hatcheries & Foods. ' . $mode . ' the app now https://play.google.com/store/apps/details?id=com.ffc.www';
 					$msg = urlencode($msg);
 					$to = $n['mobile'];
 					$data1 = "uname=habitm1&pwd=habitm1&senderid=AHFPVT&to=" . $n['mobile'] . "&msg=" . $msg . "&route=T&peid=1701170071671948377&tempid=1707170080589215606";
@@ -658,34 +658,32 @@ if(isset($request->date) && $request->date!=null){
 	}
 	public function insert_s_d_entry(Request $request)
 	{
-		if($request->shop_id){
+		if ($request->shop_id) {
 
-		$last_record = ['total_salable_chicken' => 0, 'total_salable_g_k' => 0];
-		$last_record = StockDispose::select('total_salable_chicken', 'total_salable_g_k')
-			->where('shop_id', $request->shop_id)->orderby('id', 'desc')->first();
-		if (!$last_record) {
-			$last_record = [
-				'total_salable_chicken' => 0,
-				'total_salable_g_k' => 0
-			];
+			$last_record = ['total_salable_chicken' => 0, 'total_salable_g_k' => 0];
+			$last_record = StockDispose::select('total_salable_chicken', 'total_salable_g_k')
+				->where('shop_id', $request->shop_id)->orderby('id', 'desc')->first();
+			if (!$last_record) {
+				$last_record = [
+					'total_salable_chicken' => 0,
+					'total_salable_g_k' => 0
+				];
+			}
+
+			StockDispose::create([
+				'shop_id' => $request->shop_id,
+				'date' => $request->date,
+				'time' => $request->time,
+				'salable_chicken' => $request->salable_chicken,
+				'salable_g_k' => $request->salable_g_k,
+				'dispose_chicken' => $request->dispose_chicken,
+				'dispose_g_k' => $request->dispose_g_k,
+				'total_salable_chicken' => $last_record['total_salable_chicken'] + $request->salable_chicken - $request->dispose_chicken,
+				'total_salable_g_k' => $last_record['total_salable_g_k'] + $request->salable_g_k - $request->dispose_g_k,
+			]);
+			return redirect()->route('stock_and_dispose')->with('successcode', 1);
+		} else {
+			return redirect()->back()->with('successcode', 0);
 		}
-
-		StockDispose::create([
-			'shop_id' => $request->shop_id,
-			'date' => $request->date,
-			'time' => $request->time,
-			'salable_chicken' => $request->salable_chicken,
-			'salable_g_k' => $request->salable_g_k,
-			'dispose_chicken' => $request->dispose_chicken,
-			'dispose_g_k' => $request->dispose_g_k,
-			'total_salable_chicken' => $last_record['total_salable_chicken'] + $request->salable_chicken - $request->dispose_chicken,
-			'total_salable_g_k' => $last_record['total_salable_g_k'] + $request->salable_g_k - $request->dispose_g_k,
-		]);		
-		return redirect()->route('stock_and_dispose')->with('successcode', 1);
-	}else{
-		return redirect()->back()->with('successcode', 0);
-
-	}
-
 	}
 }

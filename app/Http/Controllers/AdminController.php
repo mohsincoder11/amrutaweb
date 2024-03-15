@@ -521,7 +521,7 @@ class AdminController extends Controller
 		$msg = urlencode($request->msg);
 		$to = $request->mobile;
 		$template_id=$request->template_id;
-		 $data1 = "uname=habitm1&pwd=habitm1&senderid=AHFPVT&to=" . $to . "&msg=" . $msg . "&route=T&peid=1701170071671948377&tempid=".$template_id;				
+		 $data1 = "uname=habitm1&pwd=habitm1&senderid=AMFOOD&to=" . $to . "&msg=" . $msg . "&route=T&peid=1001880907683289176&tempid=".$template_id;				
 		$ch = curl_init('http://bulksms.webmediaindia.com/sendsms?');
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data1);

@@ -45,8 +45,6 @@ class Api_controller extends Controller
     {
         $this->delivery_charge = env('delivery_charge');
     }
-
-	
 	public function get_coupon_api()
 	{
 		return response()->json(DB::table('coupon-masters')->orderby('id', 'desc')->get());
@@ -1152,7 +1150,7 @@ class Api_controller extends Controller
 
 		//return response()->json(date('Y-m-d'));
 		$getsingle = Shoporderlist::select('orderid')->orderBy('id', 'desc')->first();
-		$orderid = $getsingle['orderid'] + 1;
+		$orderid = time().rand(10000,99999);
 		$master_id = 1;
 		foreach ($insert_data['data'] as $d) {
 			$insert = Shoporderlist::create([

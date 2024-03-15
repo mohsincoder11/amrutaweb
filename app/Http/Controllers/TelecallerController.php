@@ -151,7 +151,7 @@ if(isset($request->date) && $request->date!=null){
 		if ($request->orderid == '') {
 			$getsingle = Teleorderlist::select('id')->orderBy('id', 'desc')->first();
 			if ($getsingle != '') {
-				$orderid = $getsingle['id'] + 1;
+				$orderid = time().rand(10000,99999);
 			} else {
 				$orderid = 1;
 			}
@@ -229,7 +229,7 @@ if(isset($request->date) && $request->date!=null){
 
 	public function tele_app_orders()
 	{
-		$this->data['delivery_charge']=env('delivery_charge');
+		$this->data['delivery_charge']=env('delivery_charge');		
 		$this->data['apporder'] = Telebookorder::whereRaw('DATE(created_at) = ?', date('Y-m-d'))
 		->where('orderfrom','app')->orderby('id', 'desc')->get();
 		return view('Telecaller.tele_app_orders', $this->data);
